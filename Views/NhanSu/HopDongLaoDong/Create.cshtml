@@ -1,0 +1,529 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model HopDongLaoDongModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";    
+}
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.uploadfile.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/additional-methods.min.js"></script>
+<script src="~/Scripts/batdongsan.validate.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".datepicker").datetimepicker({
+            locale: 'vi',
+            format: 'DD/MM/YYYY'
+        });
+
+        $(".numberinput").autoNumeric('init', { mDec: 2, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0' });
+        $(".numberinputInt").autoNumeric('init', { mDec: 0, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0' });
+        $(".numberinputNega").autoNumeric('init', { mDec: 2, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '-999999999' });
+
+        $('#bac').change(function () {
+            if ($('#bac').val() != 0) {
+                $('#bacChucVu').empty();
+                $('#luongCoBan, #luongThanhTich, #tongLuong').val(0);
+                var url = '@Url.Action("GetBacChucVu", "HopDongLaoDong")' + '/' + this.value;
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: 'json',
+                    success: function (data) {
+                        var textAppend = '';
+                        textAppend += '<option value="0">--Chọn--</option>';
+                        $.each(data, function (i, n) {
+                            textAppend += '<option value="' + n.capBacChucVu + '">' + n.capBacChucVu + '</option>'
+                        })
+                        $('#bacChucVu').append(textAppend);
+                    }, error: function () {
+                        Alert.error("Có lỗi xảy ra", "Lỗi", { displayDuration: 2000 });
+                    }
+                })
+            }
+            else {
+                $('#bacChucVu').empty();
+                $('#bacChucVu').prepend("<option value='0' selected='selected'>--Chọn--</option>");
+            }
+        });
+
+        $('#bac,#bacChucVu').prepend("<option value='0' selected='selected'>--Chọn--</option>");
+        //$('#bac').prepend($('<option selected="selected">', {
+        //    value: "0",
+        //    text: "--Chọn--"
+        //}));
+
+
+        $('#bacChucVu').change(function () {
+            $('#luongCoBan, #luongThanhTich, #tongLuong').val(0);
+        })
+
+        $("#btnNhanVien").click(function () {
+            @*var url = "@Url.Action("GetNhanVienInfo", "User")";*@
+            $("#customModal .modal-dialog").addClass("modal-lg");
+            var url = "@Url.Action("NhanVienChuaKy", "HopDongLaoDong")";
+            $("#custom-panel").load(url);
+        });
+
+        $(document).on("click", ".btnChonNVPB", function () {
+            var selected = $(this).parent();
+            if (selected.length != 0) {
+                var hoten = selected.find('#hotenNVPB').val(),
+                    manv = selected.find('#maNVPB').val(),
+                    chucDanh = selected.find("#chucVuNVPB").val();;
+                $('#tenNhanVien').val(hoten);
+                $('#maNhanVien').val(manv);
+                $("#tenChucDanh").val(chucDanh);
+                //$('.panel-default').html('');
+            }
+        });
+
+        $("#tongLuong").on("keyup keydown", function () {
+            var luongThoaThuan = $("#luongThoaThuan").autoNumeric("get"),
+                    tongLuong = $("#tongLuong").autoNumeric("get");
+
+            var tyLeHuong = parseFloat(tongLuong) / parseFloat(luongThoaThuan) * 100;
+            if (parseFloat(tongLuong) > parseFloat(luongThoaThuan)) {
+                $("#tongLuong").autoNumeric("set", luongThoaThuan);
+                $("#tyLeHuong").autoNumeric("set", 100);
+            }
+            else {
+                $("#tyLeHuong").autoNumeric("set", tyLeHuong.toFixed(2));
+            }
+        });
+
+        $("#luongCoBan, #luongThanhTich").on("keyup keydown", function () {
+            //var luongThoaThuan = $("#luongThoaThuan").autoNumeric("get");
+            //var phuCapLuong = $("#phuCapLuong").autoNumeric("get");
+            //var khoanBoSungLuong = $("#khoanBoSungLuong").autoNumeric("get");
+
+            //var luongDongBH = parseFloat(luongThoaThuan) + parseFloat(phuCapLuong);
+            //$("#luongDongBH").autoNumeric("set", luongDongBH.toFixed(2));
+            //var tongLuong = 0;
+            //tongLuong = parseFloat(luongDongBH) + parseFloat(khoanBoSungLuong);
+            //$("#tongLuong").autoNumeric("set", tongLuong.toFixed(2));
+            tinhTongLuong()
+        });
+
+
+
+        $("#idThoiHanHopDong").change(function () {
+            if ($("#idThoiHanHopDong").val() != 0) {
+                $("#idThoiHanHopDong").removeClass('error');
+            }
+        });
+
+        $("#customModal").on("hide.bs.modal", function () {
+            $("#custom-panel").html("");
+        });
+
+        $("#btnTroVe").click(function () {
+            location.href = "/HopDongLaoDong";
+        });
+
+        $("#maLoaiHopDong").change(function () {
+            if (this.value == "THUVIEC") {
+                $("#tyLeHuong").autoNumeric("set", 85);
+            } else {
+                $("#tyLeHuong").autoNumeric("set", 100);
+            }
+            $("#tyLeHuong").trigger("keyup");
+        });
+
+        $("#idThoiHanHopDong").change(function () {
+            $.ajax({
+                url: "/HopDongLaoDong/GetThoiHanInfo/" + this.value,
+                type: "POST",
+                dataType: "json",
+                data: $("#phucap-form").serialize(),
+                success: function (data) {
+                    $("#soThang").val(data.soThang)
+                    var soThang = parseFloat(data.soThang),
+                        ngayKy = $("#ngayBatDau").val();
+
+                    var ngayKetThuc = moment(ngayKy, "DD-MM-YYYY").add(soThang, "month").subtract(1, 'd');
+
+                    $("#ngayKetThuc").val(moment(ngayKetThuc).format("DD/MM/YYYY"));
+                    if (data.loaiThoiHan == false) {
+                        $("#ngayKetThuc").val('');
+                    }
+                }
+            })
+        });
+        $(document).on("dp.hide", "#ngayBatDau", function (e) {
+            $.ajax({
+                url: "/HopDongLaoDong/GetThoiHanInfo/" + $("#idThoiHanHopDong").val(),
+                type: "POST",
+                dataType: "json",
+                data: $("#phucap-form").serialize(),
+                success: function (data) {
+                    $("#soThang").val(data.soThang)
+                    var soThang = parseFloat(data.soThang),
+                        ngayKy = $("#ngayBatDau").val();
+
+                    var ngayKetThuc = moment(ngayKy, "DD-MM-YYYY").add(soThang, "month").subtract(1, 'd');
+
+                    $("#ngayKetThuc").val(moment(ngayKetThuc).format("DD/MM/YYYY"));
+                    if (data.loaiThoiHan == false) {
+                        $("#ngayKetThuc").val('');
+                    }
+                }
+            })
+        });
+
+
+        var luong_option = null;
+        $('.btnThangLuong').click(function () {
+            luong_option = $(this).closest('div');
+            var url = '@Url.Action("GetThangLuong", "HopDongLaoDong")' + '?bac=' + $('#bac').val()
+                                                                       + '&bacChucVu=' + $('#bacChucVu').val();
+            $('#thangluong-panel').load(url);
+        })
+
+        $(document).on('click', '#thangluong-panel input[type=text]', function () {
+            var row = $(this).closest('tr'),
+                bac = row.find('#bacLuong').val(),
+                bacchucvu = row.find('#capBacChucVu').val();
+            if (luong_option.find('#luongCoBan').length > 0) {
+                luong_option.find('#luongCoBan').val(this.value);
+                //$('#bac').val('', bac);
+                //$('#bacChucVu ').autoNumeric('set', bacchucvu);
+            } else if (luong_option.find('#luongThanhTich').length > 0) {
+                luong_option.find('#luongThanhTich').val(this.value);
+            }
+            tinhTongLuong();
+        });
+
+        $("#checkPhuCapDiLai").click(function () {
+            if ($(this).is(":checked")) {
+                $("#phuCapDiLaiNew").autoNumeric("set", 200000);
+            }
+            else {
+                $("#phuCapDiLaiNew").autoNumeric("set", 0);
+            }
+        });
+    });
+
+    function tinhTongLuong() {
+        var luongcoban = $('#luongCoBan').autoNumeric('get'),
+            luongthanhtich = $('#luongThanhTich').autoNumeric('get');
+        var tongLuong = parseFloat(luongcoban) + parseFloat(luongthanhtich);
+        $('#tongLuong').autoNumeric('set', tongLuong.toFixed(2));
+    }
+
+    function beginPaging(args) {
+        // Animate        
+        $('#content').fadeOut('fast');
+    }
+
+    function successPaging() {
+        // Animate
+        $('#content').fadeIn('normal');
+    }
+
+    function failurePaging() {
+        alert("Không thể tải dữ liệu");
+    }
+
+    function enterToSeacrh(event) {
+        if (event.keyCode == 13)
+            $("#btnSearch").click();
+    }
+
+    function checkValid() {
+        //var tongLoaiI = 0, tongLoaiII = 0;
+        //var phuCapKhongTheoTiLe = parseFloat($("#tongPhuCapKhongTheoTyLe").val()),
+        //    phuCapTheoTiLe = parseFloat($("#tongPhuCapTheoTyLe").val());
+        //$(".loaiI").each(function () {
+        //    tongLoaiI += parseFloat($(this).autoNumeric("get"));
+        //})
+
+        //$(".loaiII").each(function () {
+        //    tongLoaiII += parseFloat($(this).autoNumeric("get"));
+        //})
+
+        //if (isNaN(tongLoaiI) || (tongLoaiI != phuCapKhongTheoTiLe)) {
+        //    $("#error-info").html("Tổng số tiền phụ cấp không theo tỷ lệ phải bằng " + phuCapKhongTheoTiLe);
+        //    $("#alertPhanBo").fadeIn("fast");
+        //    setTimeout(function () { $("#alertPhanBo").fadeOut("slow"); }, 4000);
+        //    return false;
+        //}
+
+        //if (isNaN(tongLoaiII) || (tongLoaiII != phuCapTheoTiLe)) {
+        //    $("#error-info").html("Tổng số tiền phụ cấp theo tỷ lệ phải bằng " + phuCapTheoTiLe);
+        //    $("#alertPhanBo").fadeIn("fast");
+        //    setTimeout(function () { $("#alertPhanBo").fadeOut("slow"); }, 4000);
+        //    return false;
+        //}
+
+        return true;
+    }
+
+</script>
+<style>
+    td
+    {
+        border: none!important;
+    }
+
+    .input-group-btn
+    {
+        position: absolute;
+        font-size: 0;
+    }
+
+    .numberinput, .numberinputNega, .numberinputInt
+    {
+        text-align: right;
+    }
+</style>
+<form id="form-submit" method="post" action="/HopDongLaoDong/Create" enctype="multipart/form-data">
+    <fieldset class="removeBorderFieldset">
+        <div id="tabs">
+            <ul class="ui-tabs-nav">
+                <li class="ui-tabs-selected active">
+                    <a href="#tab1" data-toggle="tab"><span>Thêm mới hợp đồng lao động</span></a></li>
+            </ul>
+        </div>
+        @* <div class="form-group" style="float: right">
+            <button class="btn btn-info" id="btnSubmit">Lưu </button>
+            <button class="btn btn-info" type="button" id="btnTroVe">Trở về </button>
+        </div>*@
+        <div class="tab-content">
+            <div class="tab-pane in active" id="tab1">
+                <table class="table table-hover table-striped table-condensed" style="position: relative">
+                    <tr>
+                        <td class="tdtitle" style="width: 15%">Nhân viên <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td style="width: 35%">
+                            <div style="display: inline-flex; width: 100%;">
+                                <input type="text" name="tenNhanVien" id="tenNhanVien" class="form-control" required="required" />
+                                @Html.HiddenFor(model => model.maNhanVien, new { required = "required" })
+                                <div style="width: 125px; float: right">
+                                    <button style="width: 100%;" type="button" class="btn btn-primary btn-sm" id="btnNhanVien" data-toggle="modal" data-target="#customModal">
+                                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>&nbsp;Chọn nhân viên</button>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="tdtitle" style="width: 15%">Chức danh</td>
+                        <td style="width: 35%">
+                            <input name="tenChucDanh" id="tenChucDanh" class="form-control" readonly="readonly" /></td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Mã hợp đồng <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>@Html.TextBoxFor(model => model.soHopDong, new { @class = "form-control", required = "required", @readonly = "readonly" })
+                            <span style="color: red; font-style: italic">@TempData["SoHopDong"]</span>
+                        </td>
+
+                        <td class="tdtitle">Tên hợp đồng</td>
+                        <td>@Html.TextBoxFor(model => model.tenHopDong, new { @class = "form-control" })</td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Loại hợp đồng</td>
+                        <td>@Html.DropDownListFor(model => model.maLoaiHopDong, ViewBag.LoaiHopDongs as SelectList, new { @class = "form-control", required = "required" })</td>
+
+                        <td class="tdtitle">Ngày ký hợp đồng <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ngayKy, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker", required = "required" })
+
+                        </td>
+
+                        @*  <td class="form-inline tdtitle">Tỉ lệ hưởng lương</td>
+                        <td>@Html.TextBoxFor(model => model.tyLeHuong, new { @class = "form-control numberinput", style = "width: 100%", data_v_max = "100", data_a_sign = " %", required = "required" })</td>*@
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Thời hạn hợp đồng <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>@Html.DropDownListFor(model => model.idThoiHanHopDong, ViewBag.ThoiHanHopDongs as SelectList, new { @class = "form-control", required = "required" })</td>
+
+                        <td class="tdtitle">Thời hạn</td>
+                        <td class="form-inline">
+                            <input type="text" name="soThang" id="soThang" required="required" class="form-control numberinput" style="width: 85%" readonly="readonly" />
+                            Tháng
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Ngày bắt đầu <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>@Html.TextBoxFor(model => model.ngayBatDau, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker", required = "required" })</td>
+
+                        <td class="tdtitle">Ngày kết thúc</td>
+                        <td>@Html.TextBoxFor(model => model.ngayKetThuc, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker" })</td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Bậc lương</td>
+                        <td>
+                            @Html.DropDownListFor(model => model.bac, ViewBag.Bacs as SelectList, new { @class = "form-control" })</td>
+                        <td class="tdtitle">Cấp bậc chức vụ</td>
+                        <td>
+                            @Html.DropDownListFor(model => model.bacChucVu, ViewBag.BacChucVus as SelectList, new { @class = "form-control" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Hình thức lương
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(model => model.maHinhThuc, ViewBag.HinhThucLuongs as SelectList, new { @class = "form-control" })
+                            
+
+                        </td>
+                        <td class="tdtitle">Ngày bắt đầu tính phép<span style="font-style: italic; float: right; color: red"></span></td>
+                        <td>@Html.TextBoxFor(model => model.ngayBatDauTinhPhep, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker" })</td>
+                    </tr>
+                    <tr>
+                       
+                         <td class="tdtitle">Bảo hiểm
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(model => model.maBaoHiem, ViewBag.BaoHiems as SelectList, new { @class = "form-control" })
+                            
+
+                        </td>
+                         <td class="tdtitle">Thuế
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(model => model.maThue, ViewBag.DMThues as SelectList, new { @class = "form-control" })
+                            
+
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Lương cơ bản(1) <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>
+                            <div style="display: inline-flex; width: 100%;">
+                                @Html.TextBoxFor(model => model.luongCoBan, new { @class = "form-control numberinput", required = "required" })
+                                <input style="width: 50px;" type="button" class="btn btn-primary btn-sm btnThangLuong" data-toggle="modal" data-target="#thangLuongModal" value="..." />
+                            </div>
+                        </td>
+                        @*<td class="tdtitle">Phụ cấp lương (2) <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>
+                            @Html.TextBoxFor(model => model.phuCapLuong, new { @class = "form-control numberinput", required = "required" })
+                        </td>*@
+                        <td class="tdtitle">Lương thành tích (2)</td>
+                        <td>
+                            <div style="display: inline-flex; width: 100%;">
+                                @Html.TextBoxFor(model => model.luongThanhTich, new { @class = "form-control numberinput", required = "required" })
+                                <input style="width: 50px;" type="button" class="btn btn-primary btn-sm btnThangLuong" data-toggle="modal" data-target="#thangLuongModal" value="..." />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Tổng lương (3=1+2) <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>@Html.TextBoxFor(model => model.tongLuong, new { @class = "form-control numberinput", required = "required", @readonly = "readonly" })</td>
+                        <td class="tdtitle">Lương đóng BH<span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>
+                            @Html.TextBoxFor(model => model.luongDongBH, new { @class = "form-control numberinput", required = "required" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Quỹ nội bộ</td>
+                        <td>@Html.TextBoxFor(model => model.doanPhi, new { @class = "form-control numberinput", style = "width: 100%", data_v_max = "100", data_a_sign = " %", required = "required" })</td>
+                        <td class="tdtitle">Phụ cấp thu hút</td>
+                        <td>
+                            @Html.TextBoxFor(model => model.khoanBoSungLuong, new { @class = "form-control numberinputNega", required = "required" })
+                        </td>
+                    </tr>
+                    @*<tr>
+                        <td class="tdtitle">Lương đóng BH (3=1+2) <span style="font-style: italic; float: right; color: red">*</span></td>
+                        <td>
+                            @Html.TextBoxFor(model => model.luongDongBH, new { @class = "form-control numberinput", required = "required", @readonly = "readonly" })
+                        </td>
+
+                        <td class="tdtitle">Khoản bổ sung lương (4)</td>
+                        <td>
+                            @Html.TextBoxFor(model => model.khoanBoSungLuong, new { @class = "form-control numberinputNega", required = "required" })
+                        </td>
+                        <td class="tdtitle">Tính lương phân bổ</td>
+                        <td>
+                            <button class="btn btn-info btn-xs btn-link" id="btnPhanBo" type="button" style="width: 120px; height: 24px; color: white;">Tính phân bổ lương</button>
+                        </td>
+                    </tr>*@
+
+                    @*<tr>
+                        <td class="tdtitle">Tiền xăng</td>
+                        <td>@Html.TextBoxFor(model => model.tienXang, new { @class = "form-control numberinput", required = "required" })</td>
+
+                        <td class="form-inline tdtitle">Tiền đi lại</td>
+                        <td>@Html.TextBoxFor(model => model.tienDiLai, new { @class = "form-control numberinput", required = "required" })</td>
+                    </tr>*@
+                    <tr>
+                        <td class="tdtitle">Tiền điện thoại</td>
+                        <td>
+                            @Html.TextBoxFor(model => model.tienDienThoai, new { @class = "form-control numberinput", required = "required" })
+                        </td>
+                        <td class="tdtitle">Tiền ăn giữa ca</td>
+                        <td>
+                            @Html.CheckBoxFor(model => model.tienAnGiuaCa)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Phụ cấp đi lại</td>
+                        <td> @Html.CheckBoxFor(model => model.checkPhuCapDiLai)</td>
+                         <td class="tdtitle">Tiền phụ cấp đi lại</td>
+                        <td>
+                            @Html.TextBoxFor(model => model.phuCapDiLaiNew, new { @class = "form-control numberinput", @readonly="readonly" })
+                        </td>
+                    </tr>
+                    <tr>
+                          <td class="tdtitle">Hợp đồng hết hiệu lực</td>
+                        <td> @Html.CheckBoxFor(model => model.hopDongHetHieuLuc)</td>
+                        <td class="tdtitle">Ghi chú</td>
+                        <td>
+                            <textarea class="form-control" name="ghiChuMain" id="ghiChuMain"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="alert alert-danger" id="alertPhanBo" style="margin-top: 20px; display: none">
+            <strong>Phân bổ không hợp lệ!</strong> <span id="error-info"></span>
+        </div>
+        <div id="phanbo-div" style="padding-top: 0px;">
+        </div>
+        <div class="form-group" style="float: right">
+            <button class="btn btn-info" id="btnSubmit">Lưu </button>
+            <button class="btn btn-info btnTroVe" type="button" id="btnTroVe">Trở về </button>
+        </div>
+    </fieldset>
+</form>
+<div id="customModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container" style="width: 100%">
+                    <div class="row">
+                        <div id="custom-panel" class="filter-panel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="thangLuongModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div id="thangluong-panel" class="filter-panel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

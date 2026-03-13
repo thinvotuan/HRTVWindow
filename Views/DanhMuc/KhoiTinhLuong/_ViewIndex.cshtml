@@ -1,0 +1,89 @@
+﻿@using BatDongSan.Models.DanhMuc
+@model IList<tbl_NS_KhoiTinhLuong>
+
+@{
+    int i = 0;
+    var listCon = ViewBag.Con as List<tbl_NS_KhoiTinhLuong>;
+    LinqDanhMucDataContext context = new LinqDanhMucDataContext();
+}
+@foreach (var item in Model)
+{
+    var itemCon = listCon.Where(d => d.maCha == item.maKhoiTinhLuong.ToString()).ToList();
+    i++;
+    string tenKhoiTaoDeNghiChiLuong = context.tbl_NS_KhoiTaoDeNghiChiLuongs.Where(d => d.maKhoiDeNghiChiLuong == item.maKhoiDeNghiChiLuong).Select(d => d.tenKhoiDeNghiChiLuong).FirstOrDefault() ?? string.Empty;
+    <tr>
+        <td style="text-align: center">@i</td>
+        <td>@item.tenKhoiTinhLuong</td>
+        <td>@tenKhoiTaoDeNghiChiLuong</td>
+        <td>
+            <input type="text" value="@item.maCongTrinh" class="form-control maCongTrinh"  name="maCongTrinh" maKhoiTinhLuong="@item.maKhoiTinhLuong" />
+        </td>
+        <td>@item.ghiChu</td>
+        <td style="text-align: center">@item.ngayCapNhat.Value.ToString("dd/MM/yyyy")</td>
+        <td>
+
+            <input type="text" value="@item.stt" class="form-control numberinput soThuTuHienThi" style="text-align:right" name="soThuTuHienThi" maKhoiTinhLuong="@item.maKhoiTinhLuong" />
+        </td>
+        <td style="text-align: center">
+            @Html.CheckBox("tinhTrangSuDung", item.anHienKhoiTinhLuong ?? true, new { data_maKhoiTinhLuong = item.maKhoiTinhLuong, @class = "tinhTrangSuDung" })
+        </td>
+        <td style="text-align: right">
+            <button class="btn btn-warning btn-xs btnPhanCa" type="button" value="@item.maKhoiTinhLuong" style="display:none">Phân ca</button>
+            <button class="btn btn-warning btn-xs btnEdit" type="button" data-toggle="modal" data-target="#customModal" value="@item.maKhoiTinhLuong">Sửa</button>
+            @if (itemCon.Count == 0)
+            {
+                <button class="btn btn-warning btn-xs btnDelete" type="button" value="@item.maKhoiTinhLuong">Xóa</button>
+            }
+        </td>
+    </tr> 
+            if (itemCon != null && itemCon.Count > 0)
+            {
+                int j = 1;
+                foreach (var it in itemCon)
+                {
+                    tenKhoiTaoDeNghiChiLuong = context.tbl_NS_KhoiTaoDeNghiChiLuongs.Where(d => d.maKhoiDeNghiChiLuong == it.maKhoiDeNghiChiLuong).Select(d => d.tenKhoiDeNghiChiLuong).FirstOrDefault() ?? string.Empty;
+    <tr>
+        <td style="text-align: right"></td>
+        <td>@it.tenKhoiTinhLuong</td>
+        <td>@tenKhoiTaoDeNghiChiLuong</td>
+        <td></td>
+        <td>@it.ghiChu</td>
+        <td style="text-align: center">@it.ngayCapNhat.Value.ToString("dd/MM/yyyy")</td>
+        <td></td>
+        <td style="text-align: center">
+            @Html.CheckBox("tinhTrangSuDung", it.anHienKhoiTinhLuong ?? true, new { data_maKhoiTinhLuong = it.maKhoiTinhLuong, @class = "tinhTrangSuDung" })
+        </td>
+        <td style="text-align: right">
+            <button class="btn btn-warning btn-xs btnEdit" type="button" data-toggle="modal" data-target="#customModal" value="@it.maKhoiTinhLuong">Sửa</button>
+            <button class="btn btn-warning btn-xs btnDelete" type="button" value="@it.maKhoiTinhLuong">Xóa</button>
+        </td>
+    </tr>
+                    j++;
+                }
+            }
+}
+
+<script>
+    $(document).ready(function () {
+        LoadChange();
+    });
+    function LoadChange() {
+        $('.tinhTrangSuDung').click(function () {
+            var trangThai = 1;
+            if (this.checked) {
+                trangThai = 1;
+            }
+            else {
+                trangThai = 0;
+            }
+            var url = '@Url.Action("UpdateNgungSuDung", "KhoiTinhLuong")';
+            var maKhoiTL = $(this).attr('data-maKhoiTinhLuong');
+            $.post(url, { maKhoiTL: maKhoiTL, trangThai: trangThai }, function () {
+                Alert.success("Cập nhật thành công.", "Thông báo", { displayDuration: 4000 });
+
+            }).fail(function () {
+                Alert.error("Có lỗi xảy ra trong quá trình xử lý.", "Thông báo", { displayDuration: 4000 });
+            })
+        });
+    }
+</script>

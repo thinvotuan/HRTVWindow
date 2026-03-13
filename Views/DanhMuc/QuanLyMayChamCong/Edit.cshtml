@@ -1,0 +1,52 @@
+﻿@using BatDongSan.Models.DanhMuc;
+@model HT_MayChamCong
+
+<script src="~/Scripts/autoNumeric.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".numberinput").autoNumeric('init', { mDec: 0, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0', vMax: '10' });
+    })
+</script>
+<div class="bs-callout bs-callout-info" id="callout-glyphicons-location">
+    <h4 style="color: #1b809e; margin-left: 10px">Cập nhật máy chấm công</h4>
+</div>
+<div style="margin-top: 15px">
+    <table class="table table-responsive" id="tbl-create">
+        <tr>
+            <td class="tdtitle">Mã máy <span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.maMay, new { @class = "form-control", required = "required", @readonly = true })</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Tên máy <span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.tenMay, new { @class = "form-control", required = "required" })</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Tên công trình <span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.tenCongTrinh, new { @class = "form-control", required = "required" })</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Trạng thái sử dụng</td>
+            <td>
+                @Html.CheckBox("trangThai", Model.trangThai == true ? true : false)
+            </td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Ghi chú</td>
+            <td>@Html.TextBoxFor(model => model.ghiChu, new { @class = "form-control", required = "required" })</td>
+        </tr>
+    </table>
+</div>
+
+<style>
+    #tbl-create td {
+        border: none;
+    }
+
+    #tbl-create {
+        margin: 0;
+    }
+
+    #tbl-mota td {
+        border: none;
+    }
+</style>

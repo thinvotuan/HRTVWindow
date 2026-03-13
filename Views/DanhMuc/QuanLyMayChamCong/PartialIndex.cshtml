@@ -1,0 +1,44 @@
+﻿@using BatDongSan.Models.DanhMuc
+@model IPagedList<sp_NS_MayChamCong_IndexResult>
+@{
+    Layout = null;
+    int i = 1;  
+}
+<style>
+    td {
+        border: none;
+    }
+</style>
+
+<table class="table table-striped table-hover table-condensed" id="maintable">
+    <thead>
+        <tr>
+            <th style="text-align: center; width: 45px">STT</th>
+            <th style="width: 90px">Mã máy</th>
+            <th style="width: 120px">Tên máy</th>
+            <th style="width: 120px">Tên công trường</th>
+            <th style="width: 60px">Trạng thái</th>
+            <th style="width: 200px">Ghi chú</th>
+            <th style="width: 100px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {                            
+            <tr>
+                <td style="text-align: center">@i</td>
+                <td style="text-align: left">@item.maMay</td>
+                <td style="text-align: left">@item.tenMay</td>
+                <td style="text-align: left">@item.tenCongTrinh</td>
+                <td style="text-align: center">@Html.CheckBox("trangThaiSuDung", item.trangThai == true ? true : false, new { @style = "pointer-events: none;" })</td>
+                <td style="text-align: left">@item.ghiChu</td>
+                <td style="text-align: center">
+                    <a class="btnEdit" alt="@item.maMay" data-toggle="modal" data-target="#customModal"  title ="Sửa phiếu"><i class="fa fa-pencil-square-o" style="font-size: 30px; color: orange; cursor: pointer;" aria-hidden="true">| </i></a>
+                    <a class="btnDelete" alt="@item.maMay" title ="Xoá phiếu"><i class="fa fa-trash" style="font-size: 30px; color: red; cursor: pointer;" aria-hidden="true"></i></a>
+
+                </td>
+            </tr> 
+            i++;
+        }
+    </tbody>
+</table>

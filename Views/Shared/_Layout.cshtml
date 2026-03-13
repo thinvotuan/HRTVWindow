@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>HR - TV.WINDOW</title>
+    <link rel="stylesheet" href="~/Content/bootstrap/css/bootstrap.min.css" />
+    @*  <link href="~/Content/select2/4.0.3/css/select2.min.css" rel="stylesheet" />*@
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Content/bootstrap/js/bootstrap.min.js"></script>
+    @*   <script src="~/Content/select2/4.0.3/js/select2.full.min.js"></script>*@
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="~/Content/bootstrap/css/bootstrap-theme.min.css" />
+
+    <link rel="stylesheet" href="~/Content/batdongsan-alert.css" />
+    <script src="~/Scripts/batdongsan.generals.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    @*<script src="~/Scripts/detectMobile.js"></script>
+   @Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/datetime-1.0.0.js"></script>
+    <script src="~/Scripts/Validate.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/vi.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/autoNumeric.js"></script>
+    <script src="~/Scripts/batdongsan.uploadfile.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/additional-methods.min.js"></script>
+    <script src="~/Scripts/batdongsan.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <link rel="stylesheet" href="~/Content/font/css/font-awesome.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/bootstrap/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/bootstrap/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/site20180827.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/menuMobile.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/common.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/votes.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/v1_20170214.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    @{Session["maMau"] = "4b6580";}
+    <script>function imgError(image) {
+    image.onerror = "";
+    image.src = "/Content/images/no-image.jpg";
+    return true;
+}
+        function imgErrorUser(image) {
+            image.onerror = "";
+            image.src = "/Content/images/no-image.jpg";
+            return true;
+        }</script>
+    <style>
+        .note-editor table {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        #editor table, .formatTable table {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .ResponTal table
+    {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+        #nav, ul#menu,ul#menu li.parent,p.MK,div.help, div.logout, #container th,.btnMenuMobile, .hvr-underline-from-center:before
+        {
+           background-color: #@Session["maMau"] !important;
+            color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+        }
+        #wrapper.btn, #wrapper.btn{
+         background-color: #@Session["maMau"] !important;
+        }
+        #login i,fieldset legend{
+           color: #@Session["maMau"] !important;
+        }
+        p.MK,body fieldset{
+            border: 1px solid #@Session["maMau"] !important;
+        }
+        #tabs ul.ui-tabs-nav li.ui-tabs-selected.ui-state-active a{
+         
+        border-bottom-color: #@Session["maMau"] !important;
+        }
+        fieldset .btn-info,fieldset .btn-primary{
+          
+           background-color: #@Session["maMau"] !important;
+            border-color: #@Session["maMau"] !important;
+            background-image: linear-gradient(to bottom,#@Session["maMau"] 0,#@Session["maMau"] 100%);
+        }
+        
+       
+    </style>
+    <!--Icon button-->
+    @{
+        string tenMau = (string)Session["tenMau"];
+        string positionVal = (string)Session["positionVal"];
+
+
+        positionVal = "-168px";
+        tenMau = "colorTheme";
+        if (tenMau == "colorTheme")
+        {
+        <style>
+     input[value="Tìm kiếm"], input[value="Search"], button[value="Tìm kiếm"], button[value="Search"],input[value="Tìm"], button[value="Tìm"],input[id="btnSearch"],
+     input[value="Thêm"],button[value="Thêm"], input[value="Sửa"], button[value="Sửa"],
+     input[value="Xóa"], button[value="Xóa"], input[value="Gửi duyệt"], button[value="Gửi duyệt"],.btnPrint, #btnPrint, 
+     input[value="Thêm dòng"],button[value="Thêm dòng"], input[value="Lưu"], button[value="Lưu"],
+     input[value="In"],button[value="In"],input[value="Print"],button[value="Print"],input[value="Print View"],
+     button[value="Print View"],input[value="Trở về"], button[value="Trở về"], input[value="Thêm file"], button[value="Thêm file"],input[value="Import file"], button[value="Import file"], 
+     input[value="Xuất File"], button[value="Xuất File"],input[value="Xuất file"], button[value="Xuất file"],input[value="Export file"], button[value="Export file"],input[value="Xuất Excel"], button[value="Xuất Excel"],#btnTroVe,#btnSubmit,.btnDelete,#btnDelete,.btnUpdate,#btnUpdate,.btnThemeAdd,#btnThem,.btnThemeAddFile,.btnTroVe,.btnThemeSave,.btnUpdate,input[value="Gửi duyệt"], button[value="Gửi duyệt"],.btnEdit
+    {
+        background-position: 0px @positionVal !important;
+        border: 1px solid #fff !important;
+    }
+    
+</style>
+
+        }
+    }
+    <!-- End Icon -->
+
+
+    <style>
+        .iconTB {
+            animation: colorText 20s linear 5s infinite alternate;
+        }
+    </style>
+    <script>
+        //Set Time
+        //var startTime = 2100;    //  Sau 35p, Time, tính bằng giây 1 = 1s
+        var startTime = 300; // 5 phut request 1 lan
+        var s = startTime;
+        var countTime = 0;
+        var status = false;
+
+        var timeout = null; // Timeout
+        function start() {
+
+            if (s == -1) {
+
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/CheckSession/',
+                    data: {
+
+                    },
+                    success: function (result) {
+
+                        if (result) {
+
+
+                            s = startTime;
+                            // Reset Time
+                            countTime = 0;
+                            clearTimeout(timeout);
+                            start();
+                        }
+                        else {
+                            window.location = '/Home/Index';
+                        }
+                    }
+                });
+
+
+
+            }
+            else {
+                timeout = setTimeout(function () {
+                    s--;
+                    start();
+                }, 1000);
+            }
+        }
+
+        function doSetTimeout(i) {
+            setTimeout(function () { alert(i); }, 1000);
+        }
+        start();
+
+        //End Set Time
+
+        function ViewDetailHistoryLayout(soPhieu, maQuiTrinh) {
+            var url = '/DMNguoiDuyet/LichSuDuyetPhieu/' + soPhieu + '?maQuiTrinh=' + maQuiTrinh;
+            PopUpManagerLayout(url, "DUYET", 900, 250);
+        }
+
+        function PopUpManagerLayout(url, title, w, h) {
+            var left = (screen.width / 2) - (w / 2);
+            var top = (screen.height / 2) - (h / 2);
+            var targetWin = window.open(url, title, 'width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+        }
+
+    </script>
+    @*<script type="text/javascript"
+        src="https://translate.google.co.uk/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                multilanguagePage: true
+            }, 'translate_select');
+        }
+    </script>*@
+</head>
+
+
+<body>
+    @* class="container-fluid" *@
+    <div class="wrapper_all">
+        <header>
+
+            <div class="content-wrapper">
+                <div class="group_header setwrapper">
+
+                    <div class="float-left" id="logo">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img class="img-logo" src="/Images/logo.jpg" /></a>
+                    </div>
+                    <div class="float-right">
+
+
+
+                        <section id="login" class="hideMobile">
+                            @Html.Partial("_LoginPartial")
+                        </section>
+                    </div>
+                    @*<div style="color: #0023da; font-size: 15px; font-style: italic; text-align: right;" class="iconTB">
+                        " Năm mới 2017 ! Kính chúc Anh/Chị cùng Gia Đình dồi dào Sức Khoẻ và tràn đầy Hạnh Phúc "
+                    </div>*@
+                    @*<div id="translate_select" style="position: absolute; right: 0px; height: 24px; overflow: hidden; top: 62px;">
+                    </div>*@
+                </div>
+
+                <div class="main-menu hideMobile">
+                    <section id="main-menu">
+                        @Html.Partial("_MenuPartial")
+                    </section>
+                </div>
+                <div class="newMenu showMobile">
+                    <a id="toggle" href="#"><i class="fa fa-bars"></i></a>
+                    <div id="overlay"></div>
+                    <nav id="menuMobile">
+                        <ul>
+                            @Html.Partial("_MenuMobilePartial")
+                        </ul>
+                    </nav>
+                </div>
+                <div class="setting showMobile">
+                    <div class="iconSetting">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                    <div class="contentSetting">
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </div>
+                @* <div class="menu_mobile showMobile">
+
+
+                    @Html.Partial("_MenuMobilePartial")
+
+                </div>*@
+                <div class="clr"></div>
+
+            </div>
+        </header>
+        <div class="pageLoading" style="display: none">
+            <img src="/Content/images/loadingPage.gif" />
+        </div>
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix setwrapper" style="padding-top: 10px">
+            @RenderBody()
+        </section>
+
+        <footer>
+            <div class="content-wrapper">
+                <div>
+                    <p>&copy; @*@DateTime.Now.Year*@ 2016 - Nhân Sự TV.WINDOW</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+    @*@Scripts.Render("~/bundles/jquery")*@
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $(document).on("click", "ul.pagination li", function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 0);
+            });
+
+            // end GH
+            $(".box-cd .content_chude div").click(function () {
+                var index = $(".box-cd .content_chude div").index(this);
+                var url = window.location.href;
+                var valClass = $(".box-cd .content_chude div").eq(index).attr("class");
+
+                arrColor = valClass.split(" ");
+
+                // setTimeout(function() {
+
+                window.location = '/Home/changeTheme?maMau=' + arrColor[0] + '&tenMau=' + arrColor[1] + '&positionVal=' + arrColor[2] + '&url=' + url;
+                //  },);
+            });
+            //HOtline
+            $('#HotLineSupport').click(function () {
+                $("#ShowHotLine").fadeIn(200);
+            }).mouseleave(function () {
+                $("#ShowHotLine").fadeOut(200);
+            });
+            //End hotLine
+            // Set Download
+            $(".box-cd").hide();
+            $('.txt-download').click(function () {
+                $(".box-download").fadeIn(200);
+            }).mouseleave(function () {
+                $(".box-download").fadeOut(200);
+            });
+
+            // End download
+            // Set Chu De
+            $(".box-cd").hide();
+            $('.txt-cd').click(function () {
+                $(".box-cd").fadeIn(200);
+            }).mouseleave(function () {
+                $(".box-cd").fadeOut(200);
+            });
+
+            //End Chu De
+            $('#menu li.responsive > a').click(function () {
+                $('li.responsive').removeClass('active');
+                $(this).parent().addClass('active');
+            });
+
+            $(".mo-rong").click(function () {
+                $("#res-menu").toggleClass("show-res");
+            });
+            $("#inForHover").click(function () {
+                $("#popUpUser").toggleClass("addHeightWidth");
+                $(".gb_u").toggle();
+            });
+            $('#ToBackTop').hide();
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) {
+                    $('#ToBackTop').fadeIn();
+                } else {
+                    $('#ToBackTop').fadeOut();
+                }
+            });
+            $('#ToBackTop').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 500);
+                return false;
+            });
+            //Setting
+            $(".iconSetting").click(function () {
+                $(".contentSetting").slideToggle();
+            });
+            // End setting
+
+        });
+
+
+    </script>
+    <link rel="stylesheet" href="~/Content/mobile.css" type="text/css" />
+    <script>
+        (function ($) {
+            var ico = $('<i class="fa fa-caret-right"></i>');
+            $('nav#menuMobile li:has(ul) > a').append(ico);
+            $('nav#menuMobile li:has(ul)').addClass('parentMenuID');
+            $('nav#menuMobile li li:has(ul)').addClass('parentMenu').removeClass('parentMenuID');
+            $('.parentMenu').on('click', function () {
+                var clsMenuParent = $(this).parent().parent().attr('id');
+                var idclsMenuParent = "#" + clsMenuParent;
+
+                if ($(this).hasClass('open')) {
+
+
+                    $(this).removeClass('open');
+                }
+                else {
+                    $(this).addClass('open');
+
+                }
+            });
+            $('.parentMenuID a').on('click', function () {
+                var clsMenuParent = $(this).parent().attr('id');
+                var idclsMenuParent = "#" + clsMenuParent;
+                if ($(idclsMenuParent).hasClass('open')) {
+                    $(idclsMenuParent).removeClass('open');
+                }
+                else {
+                    $(idclsMenuParent).addClass('open');
+                }
+            });
+
+            $('a#toggle').on('click', function (e) {
+                $('html').toggleClass('open-menu');
+                return false;
+            });
+
+
+            $('div#overlay').on('click', function () {
+                $('html').removeClass('open-menu');
+            })
+            // Get height
+            var heightWD = $(document).height();
+
+            $(".main-content").css("min-height", heightWD);
+        })(jQuery)
+
+    </script>
+
+    <div id="ToBackTop" class="hvr-icon-bob">
+        <i class="fa fa-chevron-up"></i>
+    </div>
+
+</body>
+</html>

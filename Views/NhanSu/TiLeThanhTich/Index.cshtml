@@ -1,0 +1,236 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model IPagedList<sp_NS_TiLeThanhTich_IndexResult>
+@{
+    ViewBag.Title = "Danh sách tỷ lệ thành tích";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/additional-methods.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.validate.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnModalCreate").click(function () {
+            location.href = "@Url.Action("Create", "TiLeThanhTich")";
+        });
+        $(document).on("click", ".btnDelete", function () {
+            var url = "@Url.Action("Delete", "TiLeThanhTich")" + "/" + $(this).attr("alt");
+            bootbox.confirm("Bạn chắc chắn xoá phiếu này không ?", function (result) {
+                if (result) {
+                    var form = document.getElementById("form-listview");
+                    form.method = "post";
+                    form.action = url;
+                    form.submit();
+                }
+            });
+        });
+        $(document).on("click", ".btnEdit", function () {
+            var url = "@Url.Action("Edit", "TiLeThanhTich")" + "/" + this.value;
+            location.href = url;
+        });
+        $(document).on("click", ".btnDetails", function () {
+            var url = "@Url.Action("Details", "TiLeThanhTich")" + "/" + this.value;
+            location.href = url;
+        });
+        $("#quy, #nam").change(function () {
+            search();
+        });
+        $('#btnTimKiem').click(function () {
+            search();
+        });
+
+        $("#btnSaveImport").click(function () {
+
+
+            bootbox.confirm("Ok để Import dữ liệu?", function (result) {
+                if (result) {
+                    var fd = new FormData();
+                    fd.append("fileToUpload", document.getElementById('fileImport').files[0]);
+                    $.ajax({
+                        url: "/TiLeThanhTich/ImportExcelData",
+                        type: 'POST',
+                        dateType: 'json',
+                        data: fd,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.success == true) {
+                                Alert.success("Lưu dữ liệu thành công", "Thông báo", { displayDuration: 2000 });
+                                search();
+                                $("#fileImport").val("");
+
+                            } else {
+                                Alert.warning("Định dạng file không được hỗ trợ", "Thông báo", { displayDuration: 0 });
+                            }
+                        },
+                        error: function (request, textStatus, errorThrown) {
+                            Alert.error("Lưu không thành công", "Thông báo", { displayDuration: 0 });
+                        }
+                    })
+                }
+            });
+        });
+        $("#btnDownload").click(function () {
+            var url = "/TiLeThanhTich/DownloadImportFile"
+            location.href = url;
+        });
+
+        $(".datepicker").datetimepicker({
+            locale: 'vi',
+            format: 'DD/MM/YYYY'
+        });
+        $("#btnCreateTrucTiep").click(function () {
+            location.href = "@Url.Action("CreateTrucTiep", "TiLeThanhTich")";
+        });
+        $(document).on('click', '#btnXuatFileTiLeTT', function () {
+            $("#quyXuatFile,#nam").removeClass('error');
+            var quyXuatFile = $("#quyXuatFile").val();
+            var nam = $("#nam").val();
+            if (quyXuatFile == 0) {
+                Alert.error("Xin vui lòng chọn quý.", "Thông báo", { displayDuration: 2000 });
+                $("#quyXuatFile").addClass('error');
+                return false;
+            }
+            if (nam == "" || nam == 0) {
+                Alert.error("Xin vui lòng chọn năm.", "Thông báo", { displayDuration: 2000 });
+                $("#nam").addClass('error');
+                return false;
+            }
+            var url = '/TiLeThanhTich/XuatFileTiLeTT'+"?nam="+ nam + "&quy="+quyXuatFile;
+            window.location = url;
+
+        });
+
+    });
+    function search() {
+        var searchText = $('#searchString').val().replace(/\ /g, '+');
+        var url = "@Url.Action("ViewIndex", "TiLeThanhTich")" + "?searchString=" + searchText + "&nam=" + $("#nam").val() + "&quy=" + $("#quy").val();
+        beginPaging();
+        $('#content').load(url);
+        successPaging();
+    }
+    function enterToSeacrh(event) {
+        if (event.keyCode == 13)
+            $("#btnTimKiem").click();
+    }
+    function ToWeek() {
+        $("#denNgay").data("DateTimePicker").date(moment());
+        $("#tuNgay").data("DateTimePicker").date(moment().subtract(7, "day"));
+    }
+    function ToMonth() {
+        $("#denNgay").data("DateTimePicker").date(moment());
+        $("#tuNgay").data("DateTimePicker").date(moment().subtract(1, "month"));
+    }
+
+
+    function PopUpManager(url, title, w, h) {
+        var left = (screen.width / 2) - (w / 2);
+        var top = (screen.height / 2) - (h / 2);
+        var targetWin = window.open(url, title, 'width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    }
+</script>
+<style>
+    #content td
+    {
+        border-bottom: 1px inset #ADC2D6;
+        position: relative;
+    }
+
+    #content th
+    {
+        text-align: center;
+    }
+
+    #filter-panel td
+    {
+        border: none;
+    }
+</style>
+<form id="form-listview">
+    <div id="container">
+        <fieldset class="removeBorderFieldset">
+            <div id="tabs" style="" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+                <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                    <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a><span>Danh sách tỉ lệ thành tích</span></a></li>
+                </ul>
+            </div>
+            <div id="filter-panel" class="collapse filter-panel" style="display: block; position: relative">
+                <div class="panel panel-default background_top">
+                    <div class="panel-body">
+                        <div style="line-height: 28px; float: left">
+                            Tháng:@Html.DropDownList("quy", ViewData["Quys"] as SelectList, new { @style = "width:120px" })
+                            Năm:@Html.DropDownList("nam", ViewData["Nams"] as SelectList, new { @style = "width:120px" })
+                        </div>
+
+                        <div style="float: left; width: 444px; margin-left: 15px;">
+                            <input type="text" id="searchString" value="@ViewBag.Search" class="form-control" style="width: 250px;float: left;" placeholder="Nhập giá trị tìm kiếm" onkeypress="enterToSeacrh(event);" />
+                            <button class="btn btn-info" id="btnTimKiem" type="button" style="margin-top: 2px; margin-left: 2px; float: left">Tìm kiếm</button>
+                        </div>
+                        <div class="form-group" style="float: right; margin-top: 2px;">
+                            <button class="btn btn-info" id="btnModalCreate" type="button">Thêm</button>
+                            <button type="button" data-toggle="modal" data-target="#importModal" class="btn btn-info btnPopupImport">Import Excel file</button>
+                            <select id="quyXuatFile" name="quyXuatFile" style="width: 120px; float:left">
+                                <option selected="selected" value="0">[Quý]</option>
+                                <option value="1">1</option>
+                                <option value="4">2</option>
+                                <option value="7">3</option>
+                                <option value="10">4</option>
+                            </select>
+                            <button class="btn btn-info" id="btnXuatFileTiLeTT" type="button" style="margin-top: 2px; float: left; margin-left: 10px !important">Xuất File</button>
+                            @*<button class="btn btn-info" id="btnCreateTrucTiep" type="button">Tạo phiếu trực tiếp</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+                @{Html.RenderPartial("ViewIndex");}
+            </div>
+
+
+        </fieldset>
+    </div>
+</form>
+
+<div id="importModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container" style="width: 100%">
+                    <div class="row">
+                        <div id="import-panel" class="filter-panel">
+                            <div id="dialog" class="alert alert-info" style="display: none">
+                                <strong>Thông báo!</strong> File đính kèm không đúng định dạng.  
+                            </div>
+                            <h4>Tải về mẫu phiếu nhập thông tin: </h4>
+                            <button class="btn btn-link btn-sm" id="btnDownload" onclick="download()" style="background-color: #03466b !important;">
+                                <i style="color: #fff; padding-right: 0px !important;"
+                                    class="fa fa-download" aria-hidden="true"></i>
+                            </button>
+                            <h4>Chọn file dữ liệu (*.xlsx, *.xls)</h4>
+                            <div class="panel panel-default">
+                                <input type="file" id="fileImport" name="fileImport" value="Chọn file" style="border: none" />
+                            </div>
+                            <div class="panel panel-default" style="float: right">
+                                <button type="button" id="btnSaveImport" class="btn btn-primary">Lưu</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

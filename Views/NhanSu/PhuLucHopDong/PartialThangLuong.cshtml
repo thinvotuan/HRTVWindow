@@ -1,0 +1,61 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model PhuLucHopDongModel
+<div id="container">
+    <div id="content">
+        <table class="table table-striped table-hover table-condensed" id="maintable">
+            <thead>
+                <tr>
+                    <th style="text-align: center; width: 45px" rowspan="2">Bậc</th>
+                    <th rowspan="2">Cấp bậc chức vụ</th>
+                    @*<th colspan="3">Tổng lương</th>*@
+                    <th colspan="3">Lương căn bản</th>
+                    <th colspan="3">Lương thành tích</th>
+                </tr>
+                <tr>
+                    @*<th>Khởi điểm</th>
+                    <th>Chính thức</th>
+                    <th>Thực thụ</th>*@
+                    <th>Khởi điểm</th>
+                    <th>Chính thức</th>
+                    <th>Thực thụ</th>
+                    <th>Khởi điểm</th>
+                    <th>Chính thức</th>
+                    <th>Thực thụ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.thangLuongs.GroupBy(s => new { s.bac }))
+                {
+                    int i = 0;
+                    foreach (var item1 in item)
+                    {
+                    <tr>
+                        @if (i == 0)
+                        {
+                            <td class="numberinputInt" style="text-align: center" rowspan="@item.Count()">@item.Key.bac</td>
+                        }
+                        <td class="numberinputInt" style="text-align: center">@item1.capBacChucVu</td>
+                        <td style="display: none">
+                            <input type="hidden" name="capBacChucVu" value="@item1.capBacChucVu" />
+                            <input type="hidden" name="bacLuong" value="@item.Key.bac" />
+                        </td>
+                        @*<td>@Html.TextBox("tongLuongKhoiDiem", item1.tongLuongKhoiDiem, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("tongLuongChinhThuc", item1.tongLuongChinhThuc, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("tongLuongThucThu", item1.tongLuongThucThu, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>*@
+                        <td>@Html.TextBox("luongCanBanKhoiDiem", item1.luongCanBanKhoiDiem, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("luongCanBanChinhThuc", item1.luongCanBanChinhThuc, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("luongCanBanThucThu", item1.luongCanBanThucThu, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("luongThanhTichKhoiDiem", item1.luongThanhTichKhoiDiem, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("luongThanhTichChinhThuc", item1.luongThanhTichChinhThuc, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                        <td>@Html.TextBox("luongThanhTichThucThu", item1.luongThanhTichThucThu, new { @class = "numberinputInt btn-default", @readonly = "readonly" })</td>
+                    </tr>   
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(".numberinputInt").autoNumeric('init', { mDec: 0, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0' });
+</script>

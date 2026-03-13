@@ -1,0 +1,89 @@
+﻿@using BatDongSan.Models.NhanSu
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+ 
+   
+}
+<input type="hidden" id="statusCheckDuyet" value="@ViewBag.statusCheckDuyet" />
+@{
+                                
+    int i = 1;
+    int page_ = Convert.ToInt32(ViewBag.page);
+    int total_ = Convert.ToInt32(ViewBag.total);
+
+    var ls = ViewData["lsDanhSach"] as List<sp_NS_BangLuongThang13_IndexResult>;
+
+    foreach (var item in ls.ToList())
+    {
+
+    <tr>
+        <td style="text-align: center">@i</td>
+        <td>
+            <i class="fa fa-clipboard"></i><a style="color:blue" href="@Url.Action("Details", "BangLuongThang13", new { id = item.soPhieu })">@item.soPhieu</a>
+            <br />
+            <i class="fa fa-user"></i>@item.nguoiLap
+            <br />
+            <i class="fa fa-calendar" aria-hidden="true"></i>@String.Format("{0: dd/MM/yyyy}", item.ngayLap)
+        </td>
+        <td>
+            <i class="fa fa-user"></i>@item.hoTenNhanVien
+        </td>
+        <td>@item.tenPhongBan
+            <br />
+            <i class="fa fa-ticket" aria-hidden="true"></i>@item.TenChucDanh
+        </td>
+        <td style="text-align: center">@item.nam</td>
+        <td style="text-align: right">
+            @String.Format("{0:#,##0}", item.luongThang13)
+        </td>
+        <td>@Html.Raw(item.ghiChu)</td>
+
+        <td style="text-align: center">
+
+            <a href="@Url.Action("Edit", "BangLuongThang13", new { id = item.soPhieu })" title ="Sửa phiếu"><i class="fa fa-pencil-square-o" style="font-size: 30px; color: orange;" aria-hidden="true">| </i></a>
+            <a class="btnDelete" alt="@item.soPhieu" title ="Xoá phiếu"><i class="fa fa-trash" style="font-size: 30px; color: red; cursor: pointer;" aria-hidden="true"></i></a>
+
+        </td>
+    </tr> 
+        i++;
+    }
+}
+<tr>
+    <td colspan="10" align="left">
+        @{
+                
+            if (page_ > 1)
+            {
+        
+            <a class="pageFirst" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(1);">First</a> <a class="pagePrevious" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ - 1));">
+                Previous</a>
+       
+            }
+
+
+            if (page_ - 2 >= 1)
+            { 
+            <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ - 2));">
+                @(page_ - 2) </a> <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ - 1));">
+                    @(page_ - 1) </a>
+            } <span class="pageActive">@page_</span>
+            if (page_ + 2 <= total_)
+            { 
+            <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ + 1) );">
+                @(page_ + 1) </a> <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ + 2));">
+                    @(page_ + 2) </a>
+            }
+
+            if (page_ < total_)
+            { 
+        
+            <a class="pageNext" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@(page_ + 1));">Next</a> <a class="pageLast" href="javascript:void(0)" onclick="javascript:OnCriteriaPC(@total_);">
+                Last</a>
+        
+            }
+        
+            <span>Tổng số dòng :</span><strong>@ViewBag.totalRow</strong>
+        }
+    </td>
+</tr>

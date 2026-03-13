@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ERPTV">
+  <DataContextMoniker Name="/ERPTVDataContext" />
+  <nestedChildShapes>
+    <classShape Id="9a3b1646-ad0d-4550-a763-f24a4acb6291" absoluteBounds="4.5, 3.125, 2, 4.0785139973958326">
+      <DataClassMoniker Name="/ERPTVDataContext/tbl_DMS_NhanVienHR" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8f9f47a8-24e1-4adf-89f4-0b1dd43a0c36" absoluteBounds="4.515, 3.585, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="afbd51b9-634a-4c5b-9bc7-9c4bc2a62bee" absoluteBounds="7.5, 3.75, 2, 1.3862939453125">
+      <DataClassMoniker Name="/ERPTVDataContext/tbl_DMS_PhongBan" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1b43e13a-8262-41fe-8ed1-cc8f1206f4d2" absoluteBounds="7.515, 4.21, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,325 @@
+﻿@using BatDongSan.Models.PhieuDeNghi;
+@model PhieuDeNghiCongTac
+@{
+    ViewBag.Title = "Chi tiết phiếu đăng ký công tác";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] nhanVienNS = ViewBag.NhanVienThuocNhoms;
+    string flagViPham = (string)ViewBag.ViPham;
+    string soLanViPham = (string)ViewBag.SoLanViPham;
+}
+
+<script>
+    $(document).ready(function () {
+        $("#btnTroVe").click(function () {
+            var url = "@Url.Action("Index")";
+            location.href = url;
+        });
+        Search();
+    });
+
+    function Search() {
+        var url = '@Url.Action("LoadXemLichSuRaVao", "ChamCong")' + "?maPhieu=" + $("#maPhieu").val();
+        var imageUrl = '<div id="divMsg" align="center"><img src="@Url.Content("~/Content/Images/loading.gif") "/></div>';
+        $('#tbody').html(imageUrl);
+        $('#tbody').load(url, function () {
+        });
+    }
+
+    function PopUpManager(url, title, w, h) {
+        var left = (screen.width / 2) - (w / 2);
+        var top = (screen.height / 2) - (h / 2);
+        var targetWin = window.open(url, title, 'width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    }
+    function chonNguoiDuyet(status, employeeId) {
+        var lyDo = "";
+        var url = ('@Url.Action("SelectCapDuyet1/", "DMNguoiDuyet")' + $('#maPhieu').val() + '?maCongViec=PhieuCongTac' + '&trangThai=' + 0 + '&title=' + "" + '&maNhanVien=' + $("#maNVD").val() + '&lyDo=' + lyDo + "&idQuiTrinh=" + $("#maQuiTrinhDuyet").val() + '&url=' + $("#url").val());
+        PopUpManager(url, "DUYET", 800, 500);
+    }
+
+    function chonNguoiDuyet2(status, employeeId) {
+        var lyDo = '';
+        var url = ('@Url.Action("SelectCapDuyet/", "DMNguoiDuyet")' + $('#maPhieu').val() + '?maCongViec=PhieuCongTac' + '&trangThai=' + 0 + '&title=' + "" + '&maNhanVien=' + $("#maNVD2").val() + '&lyDo=' + lyDo + "&idQuiTrinh=" + $("#maQuiTrinhDuyet").val() + '&url=' + $("#url").val());
+        PopUpManager(url, "DUYET", 800, 500);
+    }
+
+    function DuyetPhieu() {
+        var url = ('@Url.Action("DuyetPhieuDK/", "DMNguoiDuyet")' + $('#maPhieu').val() + '?maCongViec=PhieuCongTac' + '&maQuiTrinhDuyet=' + $('#maQuiTrinhDuyet').val() + '&url=' + $('#url').val() + '&maNhanVien=' + $('#maNVD').val());
+        PopUpManager(url, "DUYET", 1000, 300);
+      @*  if (window.confirm('Bạn có chắc chắn duyệt phiếu công tác này hay không?')) {
+            var lyDo = "";//$('#lyDo').val().replace(/\ /g, '+');
+            $.post('@Url.Action("DuyeTheoQuiTrinhDong", "DMNguoiDuyet")', { lyDo: lyDo, maNhanVien: $('#maNVD').val(), maPhieu: $('#maPhieu').val(), soNgayNghiPhep: $('#soNgayNghiPhep').val(), maCongViec: "PhieuCongTac", tenNhanVien: $('#tenNhanVien').val(), idQuiTrinh: $("#maQuiTrinhDuyet").val(), sendMail: false, sendSMS: false }, function (data) {
+                if (data.length == 0) {
+                    location.href = '@Url.Action("Details/", "PhieuCongTac")' + $('#maPhieu').val();
+                }
+                else {
+                    jAlert(data);
+                }
+            });
+        }*@
+    }
+
+    function LoadLaiTrang() {
+        location.href = '@Url.Action("ListCongViecProcess", "User")';
+    }
+
+    function LoadLaiTrangChiTiet() {
+        location.href = '@Url.Action("Details/", "PhieuCongTac")' + $('#maPhieu').val();
+    }
+    function KhongDuyet() {
+        var sendEmail = false;
+        if ($("#emailKD").is(":checked")) {
+            sendEmail = true;
+        }
+        var sendSMS = false;
+        if ($("#smsKD").is(":checked")) {
+            sendSMS = true;
+        }
+        var lyDo = $("#lyDoKhongDuyet").val();
+        if (window.confirm('Bạn có chắc chắn không duyệt phiếu công tác này hay không?')) {
+
+            $.post('@Url.Action("KhongDuyetGhiChu", "DMNguoiDuyet")', { lyDo: lyDo, maNhanVien: $('#NhanVien_maNhanVien').val(), maPhieu: $('#maPhieu').val(), maCongViec: "PhieuCongTac", tenNhanVien: $('#NhanVien_hoVaTen').val(), idQuiTrinh: $("#maQuiTrinhDuyet").val(), sendMail: sendEmail, sendSMS: sendSMS }, function (data) {
+                if (data.length == 0) {
+                    location.href = '@Url.Action("Details/", "PhieuCongTac")' + $('#maPhieu').val();
+                }
+                else {
+                    alert(data);
+                    //$(this).attr("disabled", false);
+                }
+            });
+        }
+    }
+
+    function TraLai(status, employeeId) {
+        var url = ('@Url.Action("TraLai/", "DMNguoiDuyet")' + $('#maPhieu').val() + '?maCongViec=PhieuCongTac' + '&trangThai=' + 0 + '&title=' + "" + '&maNhanVien=' + $("#maNVD").val() + '&lyDo=' + "" + "&idQuiTrinh=" + $("#maQuiTrinhDuyet").val() + '&url=' + $("#url").val());
+        PopUpManager(url, "DUYET", 700, 200);
+    }
+</script>
+<style>
+    #tbl-create td {
+        border: none;
+    }
+
+    td, input {
+        border: 0px solid #ccc;
+    }
+</style>
+@{
+    string noiCongTac = string.Empty;
+    string loaiCongTac = string.Empty;
+    //if (Model.loaiCongTac == false)
+    //{
+    //    noiCongTac = Model.tenTinh;
+    //    loaiCongTac = "Trong nước";
+    //}
+    //else if (Model.loaiCongTac == true)
+    //{
+    //    noiCongTac = Model.tenQuocGia;
+    //    loaiCongTac = "Nước ngoài";
+    //}
+
+    BatDongSan.Models.HeThong.Sys_User user1 = new BatDongSan.Models.HeThong.Sys_User();
+    if (Session["User"] != null)
+    {
+        user1 = (BatDongSan.Models.HeThong.Sys_User)Session["User"];
+    }  
+    
+}
+<div id="container" class="custome_fieldSet">
+    <fieldset class="removeBorderFieldset">
+        <div id="tabs" style="width: 30%; height: auto; border: none; float: left; box-sizing: border-box; overflow: hidden; clear: none;" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+            <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active ">
+                    <a><span><i class="fa fa-yelp" aria-hidden="true"></i>Cập nhật phiếu công tác</span></a></li>
+            </ul>
+        </div>
+        <table class="table table-striped table-hover table-condensed" id="tbl-create" style="position: relative">
+            @if (Model.NhanVien.maNhanVien != Model.NhanVienLapPhieuTT.maNhanVien)
+            {
+                <tr>
+                    <td style="width: 15%" class="tdtitle">MNV lập phiếu TT                                                                   
+                    </td>
+                    <td style="width: 35%">@Model.NhanVienLapPhieuTT.maNhanVien</td>
+                    <td style="width: 15%" class="tdtitle">Họ tên NV lập phiếu TT </td>
+                    <td style="width: 35%">@Model.NhanVienLapPhieuTT.hoVaTen</td>
+                </tr>
+            }
+            <tr>
+                <td style="width: 15%" class="tdtitle">Mã nhân viên công tác</td>
+                <td style="width: 35%">@Model.NhanVien.maNhanVien
+                    @Html.HiddenFor(model => model.NhanVien.maNhanVien)
+                    <input type="hidden" id="url" value="@ViewBag.URL" />
+                    @Html.HiddenFor(model => model.maQuiTrinhDuyet)
+                </td>
+                <td style="width: 15%" class="tdtitle">Tên nhân viên công tác</td>
+                <td style="width: 35%">@Model.NhanVien.hoVaTen</td>
+            </tr>
+            <tr>
+                <td class="tdtitle">Số phiếu ĐK công tác </td>
+                <td>@Model.maPhieu
+                </td>
+                @*<td>Loại công tác</td>
+                <td>
+                    @loaiCongTac
+                </td>*@
+                <td class="tdtitle">Phòng ban công tác </td>
+                <td>@Model.tenPhongBan
+                </td>
+            </tr>
+            <tr>
+                <td class="tdtitle">Ngày bắt đầu</td>
+                <td>@String.Format("{0: dd/MM/yyyy}", Model.ngayBatDau)</td>
+                <td class="tdtitle">Ngày kết thúc</td>
+                <td>@String.Format("{0: dd/MM/yyyy}", Model.ngayKetThuc)</td>
+            </tr>
+            <tr>
+                <td class="tdtitle">Giờ bắt đầu</td>
+                <td>@String.Format("{0:HH\\:mm}", Model.gioBatDau)</td>
+                <td class="tdtitle">Giờ kết thúc</td>
+                <td>@String.Format("{0:HH\\:mm}", Model.gioKetThuc)</td>
+            </tr>
+            <tr>
+                <td class="tdtitle">Số ngày công tác</td>
+                <td>@Model.soNgayCongTac</td>
+                <td class="tdtitle">Phụ cấp công tác</td>
+                <td>@String.Format("{0: #,#0}", Model.phuCap)</td>
+            </tr>
+            <tr>
+                <td class="tdtitle">Làm phiếu trong vòng </td>
+                <td>
+                    <div style="float: left; width: 50px;">@Html.TextBoxFor(model => model.soNgayRangBuoc, new { @class = "form-control", @readonly = true })</div>
+                    <div style="margin-left: 5px; float: left; width: 200px;">ngày kể từ ngày công tác.</div>
+                </td>
+                @if (flagViPham == "1")
+                {
+                    <td class="tdViPham" colspan="2"><span id="spVuotViPham" style="color: red; font-weight: bold">Ngày lập phiếu của Anh/Chị đã trễ hạn so với Quy định của công ty, hệ thống sẽ lưu lại vi phạm này (Số lần vi phạm: @soLanViPham) (Đang thử nghiệm hệ thống)</span></td>
+                }
+            </tr>
+            <tr>
+                <td class="tdtitle">Ghi chú</td>
+                <td colspan="3">@Html.Raw(Model.ghiChu)</td>
+
+            </tr>
+        </table>
+        <div style="text-align: right; margin-bottom: 10px">
+            <input type="hidden" name="maNVD" id="maNVD" value="@Model.NhanVien.maNhanVien" />
+            <input type="hidden" name="maNVD2" id="maNVD2" value="@user1.manv" />
+            <input type="hidden" name="tenNhanVien" id="tenNhanVien" value="@ViewBag.HoTen" />
+            @Html.HiddenFor(model => model.maPhieu)
+            @Html.HiddenFor(model => model.lyDo)
+            @if (ViewBag.TenTrangThaiDuyet != "KDD")
+            {
+                if ((Model.Duyet == null || Model.Duyet.tinhTrang == 0) && Model.nguoiLap == user1.manv && Model.Duyet.maBuocDuyet != "KDD")
+                {
+                <button class="btn btn-info" type="button" onclick="chonNguoiDuyet();">Gửi duyệt </button>
+                }
+                else if (Model.Duyet != null && (Model.Duyet.nguoiDuyet.maNhanVien == null ? string.Empty : Model.Duyet.nguoiDuyet.maNhanVien.Trim()) == user1.manv && Model.Duyet.maBuocDuyet != "DTN" && Model.Duyet.maBuocDuyet != "CDL2" && Model.Duyet.maBuocDuyet != "CD")
+                {
+                <button class="btn btn-info" type="button" onclick="chonNguoiDuyet2();">Duyệt phiếu </button>
+                <button class="btn btn-info" type="button" data-toggle="modal" data-toggle="modal" data-target="#myModalKhongDuyet">Không duyệt</button>
+                <button class="btn btn-info" type="button" onclick="TraLai();">Trả lại</button>
+                }
+                else if (Model.Duyet != null && (Model.Duyet.maBuocDuyet == "CDL2" || Model.Duyet.maBuocDuyet == "CD") && (Model.Duyet.nguoiDuyet.maNhanVien == null ? string.Empty : Model.Duyet.nguoiDuyet.maNhanVien.Trim()) == user1.manv && Model.Duyet.maBuocDuyet != "DTN")
+                {
+                <button class="btn btn-info" type="button" onclick="DuyetPhieu();">Duyệt</button>
+                <button class="btn btn-info" type="button" data-toggle="modal" data-toggle="modal" data-target="#myModalKhongDuyet">Không duyệt</button>
+                <button class="btn btn-info" type="button" onclick="TraLai();">Trả lại</button>
+                }
+                else if (Model.Duyet != null && (nhanVienNS != null && nhanVienNS.Contains(user1.manv)) && Model.Duyet.maBuocDuyet == "CTN" && Model.Duyet.maBuocDuyet != "DTN")//Tất cả nhân viên ở phòng nhân sự đều được duyệt ở đấy
+                {
+                <button class="btn btn-info" type="button" onclick="DuyetPhieu();">Duyệt</button>
+                <button class="btn btn-info" type="button" data-toggle="modal" data-toggle="modal" data-target="#myModalKhongDuyet">Không duyệt</button>
+                <button class="btn btn-info" type="button" onclick="TraLai();">Trả lại</button>
+                }
+            }
+            <button class="btn btn-info" type="button" id="btnTroVe">Trở về </button>
+        </div>
+    </fieldset>
+
+</div>
+
+
+<fieldset class="removeBorderFieldset">
+
+    <div id="tabs" style="" class="ui-tabs">
+        <ul class="ui-tabs-nav">
+            <li class="ui-tabs-selected ui-state-active"><a><span>Xem lịch sử ra vào</span></a></li>
+        </ul>
+    </div>
+    <div id="container">
+
+        <table style="width: 100%" class="table table-striped table-hover table-condensed tableThemeCustome TableMobile TableXemTinhHinhRaVao">
+
+            <thead>
+                <tr>
+                    <th style="width: 35px; text-align: center">STT
+                    </th>
+                    <th style="text-align: center">Nhân viên
+                    </th>
+
+                    <th style="text-align: center">Mã Vân tay - Mã chấm công
+                    </th>
+                    <th style="text-align: center">Tên phòng ban-Chức danh
+                    </th>
+                    <th style="text-align: center">Ngày quét</th>
+                    <th style="text-align: center">Tên ngày</th>
+                    <th style="text-align: center">Giờ quét</th>
+                    @* <th style="text-align: center; width: 210px">Máy chấm công - văn phòng/CT</th>*@
+
+
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+
+
+        </table>
+
+    </div>
+</fieldset>
+
+
+<!-- Bo sung chuc nang khong duyet them ly do-->
+<!-- Modal -->
+<div class="modal fade" id="myModalKhongDuyet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <fieldset class="fieldset1 clsDuyetPhieu">
+                    <div class="titleDP">Không duyệt phiếu</div>
+                    <form name="form" action="" method="post">
+
+                        <table style="width: 100%; font-family: Tahoma;" cellpadding="2" cellspacing="0" border="0">
+                            <tbody>
+                                <tr>
+                                    <td style="font-size: 25px; text-align: center;" colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td>Send Email:<input type="checkbox" id="emailKD">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Send SMS:<input type="checkbox" id="smsKD">
+                                    </td>
+                                    <td align="right" style="padding: 7px 0; float: right">
+                                        <input type="button" class="btn btn-info" value="Không duyệt" onclick="KhongDuyet();">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <textarea class="form-control" cols="20" id="lyDoKhongDuyet" name="lyDoKhongDuyet" rows="2"></textarea>
+                                        <div style="float: right; margin-top: 10px">
+                                            <input type="button" class="btn btn-info" value="Không duyệt" onclick="KhongDuyet();">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- End bo sung -->

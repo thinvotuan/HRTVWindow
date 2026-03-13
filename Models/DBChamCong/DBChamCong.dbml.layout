@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 14.875, 12" name="DBChamCong">
+  <DataContextMoniker Name="/DBChamCongDataContext" />
+  <nestedChildShapes>
+    <classShape Id="bedae319-3afa-4ef0-a6c2-ebc9f25e2bc2" absoluteBounds="5, 1, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/DBChamCongDataContext/Sys_Machine" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ee401ffd-856f-4366-9e86-5a6e579579d8" absoluteBounds="5.015, 1.46, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="50f5af8b-9e7a-4cb7-b1d3-96df4c52b8b0" absoluteBounds="4.625, 4.125, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/DBChamCongDataContext/Sys_SiteConection" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c48143e3-c65c-4a97-8a26-d57d711bfa2a" absoluteBounds="4.64, 4.585, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.8125 : 4.125); (5.8125 : 3.15549967447917)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/DBChamCongDataContext/Sys_SiteConection/Sys_SiteConection_Sys_Machine" />
+      <nodes>
+        <classShapeMoniker Id="50f5af8b-9e7a-4cb7-b1d3-96df4c52b8b0" />
+        <classShapeMoniker Id="bedae319-3afa-4ef0-a6c2-ebc9f25e2bc2" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="9f2b4af3-fe0b-47f1-8078-5daa096c7192" absoluteBounds="11, 1.875, 2, 2.5401025390625">
+      <DataClassMoniker Name="/DBChamCongDataContext/checkinout" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9ddcb891-b2b4-453a-a02c-278df4831ee8" absoluteBounds="11.015, 2.335, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="42a26cac-88fc-4c40-b8c7-0ba656ec8f91" absoluteBounds="12.625, 5.375, 2, 6.3861311848958326">
+      <DataClassMoniker Name="/DBChamCongDataContext/userinfo" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d13beddc-1f6c-4a5a-bff2-38be17d1f0a6" absoluteBounds="12.64, 5.835, 1.9700000000000002, 5.826131184895833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

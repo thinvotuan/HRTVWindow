@@ -1,0 +1,135 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model IPagedList<sp_NS_BangLuongThang13_IndexResult>
+@{
+    ViewBag.Title = "Danh sách bảng lương tháng 13";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/additional-methods.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.validate.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+    $(document).ready(function () {
+       
+      
+        $("#nam,#thang").change(function () {
+            $(".infor_DuyetTongHopCong").html('').hide();
+            $('#btnTimKiem').click();
+        });
+        $('#btnTimKiem').click(function () {
+            var searchText = $('#searchString').val().replace(/\ /g, '+');
+            var url = "@Url.Action("LoadXemBangLuongThang13", "ChamCong")" + "?qSearch=" + searchText + "&nam=" + $("#nam").val();
+            beginPaging();
+            $('#content').load(url, function () {
+                var trangThaiDuyet = $("#statusCheckDuyet").val();
+                if (trangThaiDuyet == "1") {
+                    $("#btnDuyetLuongThang13").hide();
+                    $("#ShowDuyet").show();
+                }
+                else {
+                    $("#btnDuyetLuongThang13").show();
+                    $("#ShowDuyet").hide();
+                }
+            });
+
+        
+        
+            successPaging();
+        });
+
+
+       
+
+        $(".datepicker").datetimepicker({
+            locale: 'vi',
+            format: 'DD/MM/YYYY'
+        });
+       
+       
+        $('#btnTimKiem').click();
+      
+
+    });
+
+    function enterToSeacrh(event) {
+        if (event.keyCode == 13)
+            $("#btnTimKiem").click();
+    }
+   
+   
+</script>
+<style>
+    #content td
+    {
+        border-bottom: 1px inset #ADC2D6;
+        position: relative;
+    }
+
+    #content th
+    {
+        text-align: center;
+    }
+
+    #filter-panel td
+    {
+        border: none;
+    }
+      .infor_THCT, .infor_CCChiTiet, .infor_DuyetTongHopCong
+    {
+        padding: 5px;
+        background: rgb(226, 144, 72);
+        border-radius: 3px;
+        color: #fff;
+        box-sizing: border-box;
+        margin: 5px auto;
+        line-height: 1.7;
+    }
+
+</style>
+<form id="form-listview">
+    <div id="container">
+        <fieldset class="removeBorderFieldset">
+            <div id="tabs" style="" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+                <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                    <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a><span>Xem bảng lương tháng 13</span></a></li>
+                </ul>
+            </div>
+            <div id="filter-panel" class="collapse filter-panel" style="display: block; position: relative">
+                <div class="panel panel-default background_top">
+                    <div class="panel-body">
+                        <div style="line-height: 28px;">
+                            <div style="float:left">
+                        Năm:@Html.DropDownList("nam", ViewData["lstNam"] as SelectList, new  {@style="width:150px" })
+                        </div>
+                            
+                         
+                        </div>
+                        <div style="clear: both"></div>
+                        <div style="display:none">
+                            <input type="text" id="searchString" value="@ViewBag.Search" class="form-control" style="width:40%;float:left" placeholder="Nhập giá trị tìm kiếm" onkeypress="enterToSeacrh(event);" />
+                            <button class="btn btn-info" id="btnTimKiem" type="button" style="margin-top: 2px; margin-left: 2px; float: left">Tìm kiếm</button>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="infor_DuyetTongHopCong" style="display: none"></div>
+
+            <div id="content">
+                @{Html.RenderPartial("ViewXemBangLuongThang13");}
+            </div>
+
+
+        </fieldset>
+    </div>
+</form>
+
+

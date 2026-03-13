@@ -1,0 +1,43 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model List<NhanVienModel>
+@{       
+    int stt=Model[0].STTTemp;
+      foreach(var item in Model){
+          var ThucNhan = Convert.ToDouble(item.ThanhTich) - Convert.ToDouble(item.Thue);
+          <tr id="rowNV_@item.maNhanVien" class="rowHienTaiNV">
+             <td>@(stt++)</td>
+             <td>@item.maNhanVien
+                 <input type="hidden" value="@item.maNhanVien" name="ValmaNhanVien" />
+             </td>
+             <td>@item.hoVaTen</td>
+              <td>@item.tenPhongBan</td>
+              <td> <input name="tyLe" class="numperInput valTyLe"style="width: 50px; float:left; background-color: rgba(226, 226, 66, 0.26); text-align:right" type="text" value="100">%</td>
+             <td><span class="numberinput lbThanhTich" style="float:right">@item.ThanhTich</span>
+                  <input type="hidden" value="@item.ThanhTich" name="valThanhTichBD" class="valThanhTichBD"   />
+                 <input type="hidden" value="@item.ThanhTich" name="valThanhTich" class="valThanhTich"   />
+
+             </td>
+              <td>
+                 <input type="text" value="@item.khoanBoSungLuong" name="valKhoanBSLuongBD" class="numberinput valKhoanBSLuongBD"  style="text-align:right"   />
+                   <input type="hidden" value="@item.khoanBoSungLuong" name="valKhoanBSLuong" class="valKhoanBSLuong" />
+
+             </td>
+             <td><span class="numberinput lbThue" style="float:right">@item.Thue</span>
+                  <input type="hidden" value="@item.Thue" name="valThue" class="valThue" />
+             </td>
+              <td>
+                  <span class="numberinput labThucNhan"  style="float:right">@ThucNhan</span>
+                  <input type="hidden" value="@ThucNhan" name="valThucNhan"class="valThucNhan" />
+              </td>
+              <td style="text-align:center">
+                   <a href="javascript:void(0);" class="clsXoa" style="color: Blue">Xóa</a>
+              </td>
+
+         </tr>
+      }  
+    
+    }
+<script type="text/javascript">
+
+	$(".numberinput").autoNumeric('init', { mDec: 0, mNum: 3, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0' });
+</script>

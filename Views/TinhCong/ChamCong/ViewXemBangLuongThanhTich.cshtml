@@ -1,0 +1,137 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model IPagedList<TiLeThanhTich>
+<script src="/Scripts/autoNumeric.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".numberinput").autoNumeric('init', { mDec: 1, mNum: 3, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '-10000000000', vMax: '10000000000' });
+    });
+</script>
+<style>
+    #contentTT table tr td.tdtitle
+    {
+        width: 20%;
+    }
+
+    #contentTT table tr td
+    {
+        width: 30%;
+    }
+
+    .numberinput
+    {
+        text-align: right;
+    }
+</style>
+<div style="max-width: 900px; clear: both; float: none; margin: 50px auto; display: block; box-shadow: 2px 2px 2px #ccc; box-sizing: border-box; padding: 10px;">
+    @{
+        var listThongTin = ViewBag.thongTin as List<vw_NS_DanhSachNhanVienTheoPhongBan>;
+        if (listThongTin != null)
+        {
+            foreach (var item in listThongTin)
+            {
+                var hinhAnh = "/UploadFiles/QLNV/" + @item.maNhanVien + ".jpg";
+                   
+   
+        <div class="" style="width: 100%; clear: both; float: none; margin-bottom: 10px; position: relative;">
+            <span style="position: absolute; right: 9px; top: 10px; padding: 3px; border-radius: 3px; background: #fff;">
+                <img id="Avatar" class="imgSmall" accept="image/*" onerror="imgError(this);" src="@hinhAnh" style="width: 30px;height: 35px;">
+            </span>
+
+            <ul style="font-size: 20px; text-align: center; margin: 0px; padding: 0px;">
+                <li style="display: block; clear: both; float: none; padding: 8px; font-size: 25px; background: #a1e8c4; border-radius: 2px; box-shadow: 0px 3px 0px #eee; text-transform: uppercase; text-shadow: 1px 3px #ccc; margin-bottom: 0px; padding-bottom: 0px;">Nhân viên
+                    <div style="text-align: center; font-size: 17px; padding: 5px; color: #ef2f15;">@item.hoTen</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="form-group bs-callout-info " style="padding: 5px; border: 1px solid #eee; border-left-width: 5px; border-radius: 3px; border-left-color: #1b809e; overflow: hidden; margin: 10px 0px;">
+            <h4 class="col-md-12" style="margin: 0px; padding: 3px; color: #ff0000 !important; font-weight: bold; font-size: 15px; text-transform: capitalize; color: #1b809e">Thông tin cơ bản<span style="color: red; font-style: italic"></span></h4>
+        </div>
+        <table class="table table-hover table-striped table-condensed" style="position: relative; width: 100%">
+            <tbody>
+                <tr>
+                    <td class="tdtitle">Mã nhân viên</td>
+                    <td>@item.maNhanVien<span style="color: red; font-style: italic"></span>
+                    </td>
+                    <td class="tdtitle">Phòng ban</td>
+                    <td>@item.tenPhongBan<span style="color: red; font-style: italic"></span>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td class="tdtitle">Chức danh</td>
+                    <td>@item.TenChucDanh
+                    </td>
+                    <td class="tdtitle">Email</td>
+                    <td>@item.email</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+            }
+        }
+    }
+    @{
+        if (Model != null && Model.Count > 0)
+        {
+
+        <div class="form-group bs-callout-info " style="padding: 5px; border: 1px solid #eee; border-left-width: 5px; border-radius: 3px; border-left-color: #1b809e; overflow: hidden; margin: 10px 0px;">
+            <h4 class="col-md-12" style="margin: 0px; padding: 3px; color: #ff0000 !important; font-size: 15px; text-transform: capitalize; color: #1b809e">Lương thành tích</h4>
+        </div>
+        <table class="table table-hover table-striped table-condensed" style="position: relative; width: 100%">
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td colspan="8"> Tháng: @item.thang</td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Tỉ lệ</td>
+                        <td class="numberinput">@item.tyle %<span style="color: red; font-style: italic"></span>
+                        </td>
+                        <td class="tdtitle">Lương thành tích</td>
+                        <td style="text-align: right; font-weight: bold;" class="numberinput">@item.luongThanhTich
+
+                        </td>
+                        <td class="tdtitle">Thuế</td>
+                        <td style="text-align: right; font-weight: bold;" class="numberinput">@item.tienThue
+
+                        </td>
+                        <td class="tdtitle">Thực nhận</td>
+                        <td style="text-align: right; font-weight: bold;" class="numberinput">@item.thucNhan
+
+                        </td>
+                    </tr>
+                
+                }
+            </tbody>
+        </table>
+
+
+
+
+        }
+    }
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

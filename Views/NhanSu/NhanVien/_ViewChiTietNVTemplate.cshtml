@@ -1,0 +1,33 @@
+﻿@using BatDongSan.Models.NhanSu;
+@{
+    ViewBag.Title = "Chi tiết thông tin nhân viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+}
+<script>
+    $(document).ready(function () {
+        $("#btnTroVe").click(function () {
+            var url = "@Url.Action("Index","Home")";
+            location.href = url;
+        });
+    });
+</script>
+
+@{
+    var noiDung = (string)ViewBag.NoiDung;
+
+    BatDongSan.Models.HeThong.Sys_User user1 = new BatDongSan.Models.HeThong.Sys_User();
+    if (Session["User"] != null)
+    {
+        user1 = (BatDongSan.Models.HeThong.Sys_User)Session["User"];
+    }  
+    
+}
+<div id="print-preview" style="width: 99%; padding: 5px">
+    @Html.Raw(noiDung)
+
+</div>
+<button class="btn btn-info" type="button" style="float: right; margin-top: 16px !important; margin-bottom: 10px !important;"id="btnTroVe">
+                Trở về
+            </button>
+

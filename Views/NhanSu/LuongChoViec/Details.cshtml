@@ -1,0 +1,145 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model HopDongLaoDongModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";    
+}
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.uploadfile.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".numberinput").autoNumeric('init', { mDec: 0, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0' });
+
+        $("#btnTroVe").click(function () {
+            location.href = "/LuongChoViec";
+        });
+    })
+
+</script>
+<style>
+    td
+    {
+        border: none!important;
+    }
+
+    .input-group-btn
+    {
+        position: absolute;
+        font-size: 0;
+    }
+
+    .numberinput
+    {
+        text-align: right;
+    }
+</style>
+<form id="form-submit" method="post" action="/LuongChoViec/Create" enctype="multipart/form-data">
+    <fieldset class="removeBorderFieldset">
+        <div id="tabs">
+            <ul class="ui-tabs-nav">
+                <li class="ui-tabs-selected active">
+                    <a href="#tab1" data-toggle="tab"><span>Chi tiết lương kiêm nhiệm</span></a></li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane in active" id="tab1">
+                <table class="table table-hover table-striped table-condensed" style="position: relative">
+                    <tr>
+                        <td class="tdtitle" style="width: 15%">Nhân viên</td>
+                        <td style="width: 35%">
+                            <div style="display: inline-flex; width: 100%;">
+                                @Model.NhanVien.hoVaTen
+                                @Html.HiddenFor(model => model.NhanVien.maNhanVien, new { required = "required" })
+                            </div>
+                        </td>
+                        <td class="tdtitle">Chức danh</td>
+                        <td>@Html.DisplayFor(model => model.tenChucDanh, new { @class = "form-control", @readonly = "readonly" })
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Mã hợp đồng</td>
+                        <td>@Html.DisplayFor(model => model.soHopDong, new { @class = "form-control", @readonly = "readonly" })
+                            <span style="color: red; font-style: italic">@TempData["SoHopDong"]</span>
+                        </td>
+                        <td class="tdtitle">Tên hợp đồng</td>
+                        <td>
+                            @Html.DisplayFor(model => model.tenHopDong, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.HiddenFor(model => model.soPhuLuc, new { @class = "form-control", @readonly = "readonly" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Mã chờ việc</td>
+                        <td>@Html.DisplayFor(model => model.maLuongChoViec, new { @class = "form-control", required = "required", @readonly = "readonly" })
+                            <span style="color: red; font-style: italic">@TempData["SoHopDong"]</span>
+                        </td>
+
+                        <td class="tdtitle">Ngày lập</td>
+                        <td>
+                            @String.Format("{0:dd/MM/yyyy}", Model.ngayLap)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Áp dụng từ</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", Model.apDungTu)</td>
+                        <td class="tdtitle">Đến hết</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", Model.apDungDen)
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Lương cơ bản (1)</td>
+                        <td class="numberinput">@Model.luongCoBan
+                        </td>
+                        <td class="tdtitle">Lương thành tích (2)</td>
+                        <td class="numberinput">@Model.luongThanhTich
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Tổng lương (3=2+1)</td>
+                        <td class="numberinput">@Model.tongLuong
+                        </td>
+                        <td class="tdtitle">Lương đóng BH</td>
+                        <td class="numberinput">@Model.luongDongBH
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Tỷ lệ</td>
+                        <td class="numberinput" data-a-sign = " %">@Model.tyLe</td>
+
+                        <td class="form-inline tdtitle">Lương kiêm nhiệm</td>
+                        <td class="numberinput">@Model.luongKiemNhiem
+                    </tr>
+                    <tr>
+                        <td class="tdtitle">Ghi chú</td>
+                        <td colspan="3">
+                            @Html.DisplayFor(model => model.ghiChu)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="form-group" style="float: right">
+            <button class="btn btn-info btnTroVe" type="button" id="btnTroVe">Trở về </button>
+        </div>
+    </fieldset>
+</form>
+<div id="customModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container" style="width: 100%">
+                    <div class="row">
+                        <div id="custom-panel" class="filter-panel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+﻿@using BatDongSan.Models.NhanSu;
+@model IPagedList<sp_NS_ThanhTich_TamResult>
+@{
+    ViewBag.Title = "Danh sách bảng lương thưởng tết";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/additional-methods.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.validate.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+       
+        $("#nam").val(2016);
+
+        $('#quy,#nam').change(function () {
+
+            search();
+
+        });
+        $("#btnSearch").click(function () {
+            search();
+        });
+
+
+
+        $(".datepicker").datetimepicker({
+            locale: 'vi',
+            format: 'DD/MM/YYYY'
+        });
+
+
+        search();
+
+
+    });
+
+
+    function search() {
+        var url = "@Url.Action("LoadXemBangLuongThuongTet", "ChamCong")" + "?nam=" + $("#nam").val() + "&quy=" + $("#quy").val();
+        var imageUrl = '<div id="divMsg" align="center"><img src="@Url.Content("~/Content/Images/loading.gif") "/></div>';
+        $('#contentTT').html(imageUrl);
+        $('#contentTT').load(url, function () {
+        });
+
+    }
+
+
+</script>
+<style>
+    #content td
+    {
+        border-bottom: 1px inset #ADC2D6;
+        position: relative;
+    }
+
+    #content th
+    {
+        text-align: center;
+    }
+
+    #filter-panel td
+    {
+        border: none;
+    }
+
+    .infor_THCT, .infor_CCChiTiet, .infor_DuyetTongHopCong
+    {
+        padding: 5px;
+        background: rgb(226, 144, 72);
+        border-radius: 3px;
+        color: #fff;
+        box-sizing: border-box;
+        margin: 5px auto;
+        line-height: 1.7;
+    }
+    .panel-body select
+    {
+        margin-left: 5px;
+    }
+</style>
+<form id="form-listview">
+    <div id="container">
+        <fieldset class="removeBorderFieldset">
+            <div id="tabs" style="" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+                <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                    <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a><span>Xem bảng lương thưởng tết</span></a></li>
+                </ul>
+            </div>
+            <div id="filter-panel" class="collapse filter-panel" style="display: block; position: relative">
+                <div class="panel panel-default background_top">
+                    <div class="panel-body">
+                        <div>
+                            <div style="float: left;margin-right: 50px;">
+                                Năm:@Html.DropDownList("nam", ViewData["lstNam"] as SelectList, new { @style = "width:150px" })
+                            </div>
+                            <div style="float: left;margin-right: 50px;">
+                                Quý:<select id="quy" name="quy" style="width: 150px">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4" selected>4</option>
+                                </select>
+                            </div>
+                            <div style="float: left">
+                                <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                                    <span class="glyphicon glyphicon-search" style="top: 2px;"></span>Tìm kiếm
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div id="contentTT">
+                @{Html.RenderPartial("ViewXemBangLuongThuongTet");}
+            </div>
+
+
+        </fieldset>
+    </div>
+</form>
+
+

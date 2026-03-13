@@ -1,0 +1,193 @@
+﻿@using BatDongSan.Models.DanhMuc
+@model IPagedList<sp_NS_MayChamCong_IndexResult>
+@{
+    ViewBag.Title = "Danh sách danh mục khác";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;    
+}
+<link rel="stylesheet" href="~/Content/batdongsan-alert.css" />
+<script src="~/Scripts/batdongsan.utils.js"></script>
+<script src="~/Scripts/batdongsan.generals.js"></script>
+<script type="text/javascript" src="~/Scripts/Jquery.treeview/jquery.treeview.js"></script>
+<link rel="stylesheet" href="~/Scripts/Jquery.treeview/jquery.treeview.css" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<style>
+    #content td, th {
+        border-bottom: 1px inset #ADC2D6;
+        position: relative;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('ul.dropdown-menu .hitarea').on('click', function (event) {
+            event.stopPropagation();
+        });
+
+        $("#btnModalCreate").click(function () {
+            var url = "@Url.Action("Create", "QuanLyMayChamCong")";
+            var form = document.getElementById("form-submit");
+            form.action = url;
+            $("#custom-panel").load(url)
+        });
+
+        $("#customModal").on("hide.bs.modal", function () {
+            $("#custom-panel").html("");
+        });
+
+        $(document).on("click", ".btnEdit", function () {
+            var url = "@Url.Action("Edit", "QuanLyMayChamCong")" + "/" + $(this).attr("alt");
+            var form = document.getElementById("form-submit");
+            form.action = url;
+            $("#custom-panel").load(url);
+        });
+
+        $(document).on("click", ".btnDelete", function () {
+            var url = "@Url.Action("Delete", "QuanLyMayChamCong")" + "/" + $(this).attr("alt");
+            bootbox.confirm("Bạn có muốn xóa không", function (result) {
+                if (result) {
+                    var form = document.getElementById("form-listview");
+                    form.method = "post";
+                    form.action = url;
+                    form.submit();
+                }
+            });
+        });
+
+        $("#btnSearch").click(function () {
+            listFilterBegin();
+        });
+
+        $(document).on("click", "#form-listview ul.dropdown-menu li a", function () {
+            $(this).closest('.dropdown').find("button").val(this.id);
+            $(this).closest(".dropdown").find('.btn').html($(this).text() + ' &nbsp;<span class="caret"></span>');
+            listFilterBegin();
+        })
+
+        listFilterBegin();
+    });
+
+    function enterToSeacrh(event) {
+        if (event.keyCode == 13)
+            $("#btnSearch").click();
+    }
+
+    function listFilterBegin() {
+        var url = "@Url.Action("Index", "QuanLyMayChamCong")" + "?searchString=" + $("#pref-search").val().replace(/\ /g, "+") + "&trangThai=" + $('#btnTrangThai').val();
+        beginPaging();
+        $("#content").html('<h4>Loading...</h4>').load(url, function () {
+            successPaging();
+        });
+    }
+
+    function beginPaging(args) {
+        // Animate        
+        $('#content').fadeOut('fast');
+    }
+
+    function successPaging() {
+        // Animate
+        $('#content').fadeIn('fast');
+    }
+
+    function failurePaging() {
+        alert("Không thể tải dữ liệu");
+    }
+
+</script>
+<form id="form-listview">
+    <div id="container">
+        <fieldset class="removeBorderFieldset">
+            <div id="tabs" class="ui-tabs">
+                <ul class="ui-tabs-nav" style="text-align: center">
+                    <li class="ui-tabs-selected ui-state-active"><a><span><i class="fa fa-list" aria-hidden="true"></i>Danh sách máy chấm công</span></a></li>
+                </ul>
+            </div>
+            @*  <div class="panel-body background_top">
+                <div class="form-inline">
+                    <div class="form-group" style="float: right">
+                        <button class="btn btn-info" id="btnModalCreate" type="button" data-toggle="modal" data-target="#customModal">Thêm </button>
+                    </div>
+                </div>
+            </div>*@
+            <div class="form-inline">
+                <div class="panel-body background_top">
+                    <div class="form-group">
+                        <input type="text" class="form-control" style="width:250px" id="pref-search" onkeypress="enterToSeacrh(event)" value="@ViewBag.Search" />
+                    </div>
+                    <div class="form-group">
+                        <button id="btnSearch" type="button" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-search" style="top: 2px;"></span>Tìm kiếm
+                        </button>
+                    </div>
+                    <div class="form-group" style="float: right">
+                        <button class="btn btn-info" id="btnModalCreate" type="button" data-toggle="modal" data-target="#customModal">Thêm </button>
+                    </div>
+                    @*  <div class="form-group" id="phongban-div">
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" id="btnPhongBan" type="button" data-toggle="dropdown">
+                                Danh sách phòng ban&nbsp;<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="phongban-dropdown-menu">
+                                <li role="presentation">
+                                    <div class="form-group has-feedback" style="width: 90%; margin: 5px auto !important; display: block;">
+                                        <input type="text" class="form-control input-sm" id="txtsearch" placeholder="Search" style="width: 100%" />
+                                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                    </div>
+                                </li>
+                                <li role="presentation">
+                                    @Html.Raw(ViewBag.PhongBans)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>*@
+                    <div class="form-group" id="trangthai-div">
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" id="btnTrangThai" type="button" data-toggle="dropdown">
+                                Chọn trạng thái&nbsp;<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="trangthai-dropdown-menu">
+                                <li role="presentation">
+                                    <a href="javascript:void(0)" id="">Chọn trạng thái</a></li>
+                                <li role="presentation">
+                                    <a href="javascript:void(0)" id="1">Đang sử dụng</a></li>
+                                <li role="presentation">
+                                    <a href="javascript:void(0)" id="0">Không sử dụng</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+                @{Html.RenderPartial("PartialIndex");}
+            </div>
+        </fieldset>
+    </div>
+</form>
+<form id="form-submit" method="post">
+    <!--------------------------- Modal - Thêm Sửa Modal Form ------------------------>
+    <div id="customModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container" style="width: 100%">
+                        <div class="row">
+                            <div id="custom-panel" class="filter-panel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnSubmit">Lưu</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseEmail">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

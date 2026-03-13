@@ -1,0 +1,101 @@
+﻿@using BatDongSan.Models.NhanSu
+@{
+    ViewBag.Title = "Index";
+    Layout = null; 
+}
+
+@{          
+    int stt = 1;
+
+    var listKTL = ViewBag.ListKTL as List<BatDongSan.Models.DanhMuc.tbl_NS_KhoiTaoDeNghiChiLuong>;
+    if (listKTL != null && listKTL.Count() > 0)
+    {
+        for (int i = 0; i < listKTL.Count(); i++)
+        {
+    <tr>
+        <td style="color: #fff; background: #4b6580;" colspan="15">@listKTL[i].tenKhoiDeNghiChiLuong</td>
+    </tr>
+            var listKTDNCL = ViewData["lstKTL" + i + ""] as List<sp_NS_BangLuongTheoBoPhanResult>;
+            if (listKTDNCL != null && listKTDNCL.Count > 0)
+            {
+                foreach (var item in listKTDNCL)
+                {
+    <tr>
+        <td align="center">
+            @(stt++)
+        </td>
+        <td>@item.boPhanTinhLuong</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.luongThang)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.luongDongBaoHiem)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.baoHiem)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.baoHiemDN)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.thue)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.TTTLLuong)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.TTTLThue)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.TTTLBaoHiem)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.TTTLBaoHiemDN)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.TTTLTamUng)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.thucLanh)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.baoHiemPhaiNop)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.thuePhaiNop)</td>
+    </tr>
+                }
+    <tr style="font-weight: bold; color: red">
+        <td align="center" colspan="2">Tổng
+        </td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.luongThang))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.luongDongBaoHiem))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.baoHiem))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.baoHiemDN))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.thue))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.TTTLLuong))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.TTTLThue))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.TTTLBaoHiem))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.TTTLBaoHiemDN))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.TTTLTamUng))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.thucLanh))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.baoHiemPhaiNop))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", listKTDNCL.Sum(d => d.thuePhaiNop))</td>
+    </tr>
+            }
+        }
+    }   
+}
+@*@{
+                                
+    int stt = 1;
+    int page_ = Convert.ToInt32(ViewBag.page);
+    int total_ = Convert.ToInt32(ViewBag.total);
+
+    var ls = ViewData["lsDanhSachBP"] as List<sp_NS_BangLuongTheoBoPhanResult>;
+
+    foreach (var item in ls.ToList())
+    {
+    <tr>
+        <td align="center">
+            @(stt++)
+        </td>
+        <td>@item.boPhanTinhLuong</td>
+        <td style="text-align: center">@item.thang</td>
+        <td style="text-align: center">@item.nam</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.tongLuong)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.baoHiem)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.thue)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.truyThu)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.truyLanh)</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", item.thucLanh)</td>
+    </tr>
+    }
+    
+    <tr style="background: #a94442; color: #ffec61; font-weight: bold;">
+        <td align="center" colspan="4">Tổng cộng
+        </td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.tongLuong))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.baoHiem))</td>
+
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.thue))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.truyThu))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.truyLanh))</td>
+        <td style="text-align: right">@String.Format("{0:###,##0}", ls.Sum(d=>d.thucLanh))</td>
+    </tr>
+}*@

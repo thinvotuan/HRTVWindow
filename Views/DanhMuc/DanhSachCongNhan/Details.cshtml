@@ -1,0 +1,196 @@
+﻿@using BatDongSan.Models.DanhMuc
+@{
+    ViewBag.Title = "Danh sách công nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;    
+}
+@model tbl_NS_DanhSachCongNhan
+<link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/vi.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/Scripts/autoNumeric.js"></script>
+<script src="~/Scripts/batdongsan.uploadfile.js"></script>
+<style>
+    .successOk
+    {
+        color:green;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#maChamCong").on("input", function () {
+            var maCCBanDau = $("#maCCBanDau").val();
+            if ($("#maChamCong").val() != maCCBanDau && $("#maChamCong").val() != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/DanhSachCongNhan/CheckMaChamCong",
+                    data: {
+
+                        maChamCong: $("#maChamCong").val()
+
+                    },
+                    error: function () {
+                        alert("Error");
+                        return false;
+                    },
+                    success: function (result) {
+
+                        if (result == 1) {
+
+                            $(".maCCInfor").html('Mã chấm công này đã tồn tại').addClass('error').removeClass("successOk");
+                            $("#maChamCong").addClass("error");
+
+                            $("#btnSubmit").hide();
+                            
+                        }
+                        else {
+                            $(".maCCInfor").html('Mã chấm công này có thể sử dụng').removeClass('error').addClass("successOk");
+                            $("#maChamCong").removeClass("error");
+                            if ($("#maCongNhan").hasClass("error") == false && $("#maChamCong").hasClass("error") == false) {
+                                $("#btnSubmit").show();
+                            }
+                        }
+
+
+                    }
+                });
+            }
+            else {
+                $(".maCCInfor").html('').removeClass('error').addClass("successOk");
+                $("#maChamCong").removeClass("error");
+                if ($("#maCongNhan").hasClass("error") == false && $("#maChamCong").hasClass("error") == false) {
+                    $("#btnSubmit").show();
+                }
+            }
+
+        });
+        $(".datepicker").datetimepicker({
+            locale: 'vi',
+            format: 'DD/MM/YYYY'
+        });
+
+        $(".numberinput").autoNumeric('init', { mDec: 0, lZero: 'deny', aSep: ',', aDec: '.', pSign: 's', vMin: '0', vMax: '10' });
+        $(".backLink").click(function (event) {
+            event.preventDefault();
+            history.back(1);
+        });
+    })
+    function goBack() {
+        window.history.back();
+    }
+
+</script>
+<div class="bs-callout bs-callout-info" id="callout-glyphicons-location">
+    <h4 style="color: #1b809e; margin-left: 10px">Chi Tiết công nhân</h4>
+</div>
+<div style="margin-top: 15px">
+    <table class="table table-responsive" id="tbl-create">
+        <tr>
+            <td class="tdtitle">Mã công nhân<span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.maCongNhan, new { @class = "form-control", required = "required", @readonly="readonly" })
+                <input type="hidden" value="@Model.maChamCong" name="maCCBanDau" id="maCCBanDau"/>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Mã chấm công <span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.maChamCong, new { @class = "form-control", required = "required"})
+                <span class="maCCInfor"></span>
+
+            </td>
+        </tr>
+         <tr>
+            <td class="tdtitle">Họ <span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.ho, new { @class = "form-control", required = "required" })</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Tên<span style="font-style: italic; color: red">*</span></td>
+            <td>@Html.TextBoxFor(model => model.ten, new { @class = "form-control", required = "required" })</td>
+        </tr>
+         <tr>
+            <td class="tdtitle">Bộ phận<span style="font-style: italic;  color: red">*</span></td>
+                        <td>@Html.TextBoxFor(model => model.boPhan, new { @class = "form-control", required = "required" })</td> 
+        </tr>
+        <tr>
+            <td class="tdtitle">Điện thoại</td>
+            <td>@Html.TextBoxFor(model => model.phoneNumber, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Giới tính</td>
+            <td>
+                <label class="radio-inline" style="font-size: 13px">
+                    @Html.RadioButtonFor(model => model.gioiTinh, true, new { style = "width:auto"}) Nam
+                </label>
+                <label class="radio-inline" style="font-size: 13px">
+                    @Html.RadioButtonFor(model => model.gioiTinh, false, new { style = "width:auto" }) Nữ
+                </label>
+
+
+            </td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Email</td>
+            <td>@Html.TextBoxFor(model => model.email, new { @class = "form-control"})</td>
+        </tr>
+        <tr>
+            <td class="tdtitle">Ngày sinh</td>
+            <td>@Html.TextBoxFor(model => model.ngaySinh, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker" })</td>
+        </tr>
+
+        <tr>
+             <td class="tdtitle">Nơi sinh</td>
+                        <td>@Html.TextBoxFor(model => model.noiSinh, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+             <td class="tdtitle">Số CMND</td>
+                        <td>@Html.TextBoxFor(model => model.CMNDSo, new { @class = "form-control"})
+                            <span style="color: red; font-style: italic">@TempData["CMND"]</span>
+                        </td> 
+        </tr>
+        <tr>
+            <td class="tdtitle">Ngày cấp CMND</td>
+             <td>@Html.TextBoxFor(model => model.CMNDNgayCap, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker"})</td>
+                        
+        </tr>
+        <tr>
+              <td class="tdtitle">Nơi cấp CMND</td>
+                        <td>@Html.TextBoxFor(model => model.CMNDNoiCap, new { @class = "form-control" })</td>
+
+        </tr>
+       
+         <tr>
+            <td class="tdtitle">Ngày vào làm</td>
+              <td>@Html.TextBoxFor(model => model.ngayVaoLam, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker" })</td>
+                    
+        </tr>
+        
+       
+        <tr>
+        <td class="tdtitle">Thông tin khác</td>
+                        <td>@Html.TextBoxFor(model => model.thongTinKhac, new { @class = "form-control" })</td> 
+            </tr>
+
+    </table>
+    <div style="float:right; margin-top:10px;">
+     <a href="javascript: history.go(1)" class="backLink">
+                        <button type="button" class="btnBlack btn"><i class="fa fa-reply-all" aria-hidden="true"></i>Quay về</button>
+                    </a>
+        </div>
+</div>
+<style>
+    #tbl-create td
+    {
+        border: none;
+    }
+
+    #tbl-create
+    {
+        margin: 0;
+    }
+
+    #tbl-mota td
+    {
+        border: none;
+    }
+</style>

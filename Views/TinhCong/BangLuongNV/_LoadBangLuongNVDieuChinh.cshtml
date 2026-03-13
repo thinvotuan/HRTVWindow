@@ -1,0 +1,93 @@
+﻿@using BatDongSan.Models.NhanSu
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+ 
+   
+}
+<input type="hidden" value="@ViewData["kqCheck"]" name="checkDuyet" id="checkDuyet" />
+@{
+                                
+    int stt = 1;
+    int page_ = Convert.ToInt32(ViewBag.page);
+    int total_ = Convert.ToInt32(ViewBag.total);
+
+    var ls = ViewData["lsDanhSach"] as List<sp_NS_BangLuongNhanVien_DieuChinhLuongResult>;
+
+    foreach (var item in ls.ToList())
+    {
+
+        string maOption = item.maNhanVien + "optradio";
+    <tr>
+        <td align="center"> @(stt++)<input name="sttMaHieu" type="hidden" value="@(stt)"></td>
+        <td align="left">
+            <input name="maNhanVien" type="hidden" value="@item.maNhanVien">@item.maNhanVien</td>
+        <td align="left">@item.hoTen</td>
+        <td align="left">@item.tenPhongBan</td>
+       @if(item.loaiTinh == 1){
+        <td align="left">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="@maOption" attrMaNhanVien="@item.maNhanVien" checked="checked" value="1"/><span>Full công</span></label></div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="@maOption" attrMaNhanVien="@item.maNhanVien" value="0"/><span>Lương tháng trước</span></label></div>
+        </td>
+       }
+        else{
+        <td align="left">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="@maOption"  attrMaNhanVien="@item.maNhanVien" value="1"/><span>Full công</span></label></div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="@maOption" attrMaNhanVien="@item.maNhanVien" checked="checked" value="0"/><span>Lương tháng trước</span></label></div>
+        </td>
+       }
+        <td align="center">
+            <button type="button" class="btnDeleteRowLuong" attrMaNhanVien="@item.maNhanVien">Xóa</button></td>
+    </tr>
+    
+                           
+    
+    }
+}
+
+<tr>
+    <td colspan="11" align="left">
+        @{
+                
+            if (page_ > 1)
+            {
+        
+            <a class="pageFirst" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(1);">First</a> <a class="pagePrevious" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ - 1));">
+                Previous</a>
+       
+            }
+
+
+            if (page_ - 2 >= 1)
+            { 
+            <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ - 2));">
+                @(page_ - 2) </a> <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ - 1));">
+                    @(page_ - 1) </a>
+            } <span class="pageActive">@page_</span>
+            if (page_ + 2 <= total_)
+            { 
+            <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ + 1) );">
+                @(page_ + 1) </a> <a class="pageCurrent" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ + 2));">
+                    @(page_ + 2) </a>
+            }
+
+            if (page_ < total_)
+            { 
+        
+            <a class="pageNext" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@(page_ + 1));">Next</a> <a class="pageLast" href="javascript:void(0)" onclick="javascript:OnCriteriaPCLuong(@total_);">
+                Last</a>
+        
+            }
+        
+            <span>Tổng số dòng :</span><strong>@ViewBag.totalRow</strong>
+        }
+    </td>
+</tr>

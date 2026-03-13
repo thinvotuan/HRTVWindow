@@ -1,0 +1,84 @@
+﻿@media only screen and (max-width: 970px) and (min-width: 0px)
+{
+	.hideMobile
+	{
+		display: none !important;
+	}
+
+	.showMobile
+	{
+		display: block;
+	}
+}
+/* Setting*/
+.setting
+{
+	position: relative;
+}
+
+.iconSetting
+{
+	position: fixed;
+	top: 10px;
+	right: 3px;
+	width: 40px;
+	height: 40px;
+	background-color: rgb(152, 150, 150);
+	text-align: center;
+	color: #ffffff;
+	display: block;
+	transition: all ease-out 0.3s;
+	border-radius: 2px;
+	font-size: 21px;
+	cursor: pointer;
+	z-index: 999999;
+}
+
+	.iconSetting .fa
+	{
+		top: 8px;
+		position: absolute;
+		right: 8px;
+		text-align: center;
+		color: #ffffff;
+		display: block;
+		transition: all ease-out 0.3s;
+		border-radius: 2px;
+		font-size: 26px;
+		padding-right: 0px !important;
+	}
+
+.contentSetting
+{
+	position: fixed;
+	background: #cec;
+	z-index: 9999;
+	right: 5px;
+	display: none;
+	top: 51px;
+	box-shadow: 2px 2px 2px #8d908d;
+	border: 1px solid #519032;
+	border-radius: 3px;
+}
+
+	.contentSetting ul
+	{
+		padding: 10px;
+		margin-bottom: 0px;
+	}
+
+		.contentSetting ul li
+		{
+			display: block;
+			float: none;
+			width: 100%;
+			clear: both;
+			padding: 5px 0px;
+			font-size: 15px;
+		}
+
+			.contentSetting ul li a:hover, .contentSetting ul li a
+			{
+				text-decoration: none;
+			}
+/*End setting*/
