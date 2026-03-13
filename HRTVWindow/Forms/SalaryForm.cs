@@ -94,13 +94,12 @@ public partial class SalaryForm : Form
         int month = (int)numMonth.Value;
         int year = (int)numYear.Value;
 
-        if (_selected == null && _repo.Exists(empId, month, year))
+        if (_selected == null && _repo.SalaryExistsForEmployee(empId, month, year))
         {
             MessageBox.Show("Nhân viên này đã có bảng lương tháng này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
-        decimal workDays = numWorkDays.Value > 0 ? numWorkDays.Value : 1;
         var salary = new Salary
         {
             EmployeeId = empId,

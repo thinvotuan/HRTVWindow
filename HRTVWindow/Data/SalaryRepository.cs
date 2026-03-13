@@ -80,7 +80,7 @@ public class SalaryRepository
         cmd.ExecuteNonQuery();
     }
 
-    public bool Exists(int employeeId, int month, int year, int excludeId = 0)
+    public bool SalaryExistsForEmployee(int employeeId, int month, int year, int excludeId = 0)
     {
         using var conn = DatabaseHelper.GetConnection();
         conn.Open();

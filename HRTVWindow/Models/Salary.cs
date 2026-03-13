@@ -15,7 +15,9 @@ public class Salary
     public decimal Allowance { get; set; }
     public decimal Bonus { get; set; }
     public decimal Deduction { get; set; }
-    public decimal NetSalary => BasicSalary / WorkingDays * ActualWorkingDays + Allowance + Bonus - Deduction;
+    public decimal NetSalary => WorkingDays > 0
+        ? BasicSalary / WorkingDays * ActualWorkingDays + Allowance + Bonus - Deduction
+        : Allowance + Bonus - Deduction;
     public string Notes { get; set; } = string.Empty;
     public DateTime? PaidDate { get; set; }
     public bool IsPaid { get; set; }
