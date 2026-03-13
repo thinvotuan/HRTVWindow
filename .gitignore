@@ -1,0 +1,24 @@
+# Build output
+bin/
+obj/
+*.user
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# VS / Rider
+.vs/
+.idea/
+*.suo
+*.ncrunch*
+*.DotSettings.user
+
+# NuGet
+packages/
+*.nupkg
+
+# OS
+.DS_Store
+Thumbs.db
